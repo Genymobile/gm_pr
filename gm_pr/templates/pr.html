@@ -1,0 +1,13 @@
+<!-- TODO: header -->
+<h1>Current PR</h1>
+
+{% for project in project_list %}
+<p>{{project.name}}</p>
+<div class="project">
+<ul>
+{% for pr in project.pr_list %}
+    <li><a href="{{pr.url}}">{{pr.title}}</a> {{pr.updated_at}} {{pr.user}}</li>
+{% endfor %}
+</ul>
+</div>
+{% endfor %}
