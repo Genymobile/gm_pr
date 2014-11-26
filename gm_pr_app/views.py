@@ -31,18 +31,21 @@ def fetch_data(project_name):
         return
     for jpr in jdata:
         if jpr['state'] == 'open':
-            review_json = get_json(jpr['comments_url'])
+            comment_json = get_json(jpr['comments_url'])
+            review_json = get_json(jpr['review_comments_url'])
 
             pr = models.Pr(url = jpr['html_url'],
                            title = jpr['title'],
                            updated_at = jpr['updated_at'],
                            user = jpr['user']['login'],
                            repo = jpr['base']['repo']['full_name'],
-                           nbreview = len(review_json))
+                           nbreview = len(review_json) + len(comment_json))
             pr_list.append(pr)
 
     sorted(pr_list, key=lambda pr: pr.updated_at)
 
+    if len(pr_list) == 0:
+        return None
     return project
 
 import time
@@ -61,7 +64,9 @@ def index(request):
     p.close()
     p.join()
     for worker in workers:
-        project_list.append(worker.get())
+        proj = worker.get()
+        if proj:
+            project_list.append(proj)
 
     after = time.time()
     print(after - before)
