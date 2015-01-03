@@ -4,7 +4,7 @@ from gm_pr.celery import app
 
 import json, urllib.request
 
-def get_json(url) :
+def get_json(url):
     """ get json data from url.
     Auth is managed in __init__.py in this module
     """
@@ -20,9 +20,9 @@ def fetch_data(project_name, url, org):
     """ Celery task, call github api
     """
     pr_list = []
-    project = { 'name' : project_name,
-                'pr_list' : pr_list,
-    }
+    project = {'name' : project_name,
+               'pr_list' : pr_list,
+              }
     url = "%s/repos/%s/%s/pulls" % (url, org, project_name)
     jdata = get_json(url)
     if len(jdata) == 0:
@@ -32,12 +32,12 @@ def fetch_data(project_name, url, org):
             comment_json = get_json(jpr['comments_url'])
             review_json = get_json(jpr['review_comments_url'])
 
-            pr = models.Pr(url = jpr['html_url'],
-                           title = jpr['title'],
-                           updated_at = jpr['updated_at'],
-                           user = jpr['user']['login'],
-                           repo = jpr['base']['repo']['full_name'],
-                           nbreview = len(review_json) + len(comment_json))
+            pr = models.Pr(url=jpr['html_url'],
+                           title=jpr['title'],
+                           updated_at=jpr['updated_at'],
+                           user=jpr['user']['login'],
+                           repo=jpr['base']['repo']['full_name'],
+                           nbreview=len(review_json) + len(comment_json))
             pr_list.append(pr)
 
     sorted(pr_list, key=lambda pr: pr.updated_at)
@@ -47,7 +47,7 @@ def fetch_data(project_name, url, org):
     return project
 
 
-class Prs:
+class PrFetcher:
     def __init__(self, url, org, projects):
         self.__url = url
         self.__org = org
@@ -60,6 +60,7 @@ class Prs:
         return a list of { 'name' : project_name, 'pr_list' : pr_list }
         pr_list is a list of models.Pr
         """
-        res = group(fetch_data.s(project_name, self.__url, self.__org) for project_name in self.__projects)()
+        res = group(fetch_data.s(project_name, self.__url, self.__org)
+                    for project_name in self.__projects)()
         data = res.get()
-        return [ project for project in data if project != None ]
+        return [project for project in data if project != None]
