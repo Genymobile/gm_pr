@@ -32,7 +32,7 @@ def slack():
     payload = {"channel": "#general",
                "username": "gm_pr",
                "text": txt,
-               "icon_emoji": ":oO:"}
+               "icon_emoji": ":Y:"}
 
 
     urllib.request.urlopen("https://hooks.slack.com/services/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", json.dumps(payload).encode('utf-8'))
