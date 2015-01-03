@@ -2,11 +2,15 @@ from __future__ import absolute_import
 
 import json
 import urllib.request
-from gm_pr import prs, settings
+from gm_pr import settings
+from gm_pr.prs import Prs
 from gm_pr.celery import app
 
 @app.task
 def slack():
+    """ Celery task, use github api and send result to slack
+    """
+    prs = Prs(settings.TOP_LEVEL_URL, settings.ORG, settings.PROJECTS)
     project_list = prs.get_prs()
     nb_proj = len(project_list)
     total_pr = 0
@@ -26,7 +30,7 @@ def slack():
 
 
     payload = {"channel": "#general",
-                "username": "webhookbot",
+                "username": "gm_pr",
                 "text": txt,
                 "icon_emoji": ":oO:"}
 
