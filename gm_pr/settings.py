@@ -106,9 +106,6 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'gm_pr.urls'
 
-# Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'gm_pr.wsgi.application'
-
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.

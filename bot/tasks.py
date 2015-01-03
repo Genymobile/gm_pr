@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import json
 import urllib.request
-from gm_pr import prs
+from gm_pr import prs, settings
 from gm_pr.celery import app
 
 @app.task
@@ -14,8 +14,8 @@ def slack():
         nb_pr = len(proj['pr_list'])
         total_pr += nb_pr
 
-    txt="""Hey, we have %d PR in %d project(s) (<http://jenkins.genymobile.com|web version>)
-""" % (total_pr, nb_proj)
+    txt="""Hey, we have %d PR in %d project(s) (<%s|web version>)
+""" % (total_pr, nb_proj, settings.WEB_URL)
 
     if total_pr > 0:
         txt += "\n"
