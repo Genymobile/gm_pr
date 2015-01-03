@@ -170,8 +170,13 @@ GITHUB_PASSWORD = "password"
 #web version
 WEB_URL = "http://jenkins.genymobile.com/gm_pr/"
 SLACK_TOKEN = "s9Wdn8diWL8bGItBNL1SuEIz"
+SLACK_URL = "https://hooks.slack.com/services/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"
 
 TOP_LEVEL_URL = "https://api.github.com"
 ORG = "Genymobile"
-PROJECTS = ("genymotion-binocle",
-           )
+PROJECTS_CHAN = \
+    { 'general' : ("genymotion-binocle",
+                  ),
+      'random' : ('FridgeCheckup',
+                 ),
+    }
