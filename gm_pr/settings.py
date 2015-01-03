@@ -115,7 +115,7 @@ TEMPLATE_DIRS = (
 
 CELERY_ACCEPT_CONTENT = ['json', 'yaml']
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_IMPORTS = ("bot.tasks", "gm_pr.prs")
+CELERY_IMPORTS = ("bot.tasks", "gm_pr.PrFetcher")
 BROKER_URL = 'sqla+sqlite:///celerydb.sqlite'
 
 
@@ -164,3 +164,14 @@ LOGGING = {
         },
     }
 }
+
+GITHUB_LOGIN = "foo@genymobile.com"
+GITHUB_PASSWORD = "password"
+#web version
+WEB_URL = "http://jenkins.genymobile.com/gm_pr/"
+SLACK_TOKEN = "s9Wdn8diWL8bGItBNL1SuEIz"
+
+TOP_LEVEL_URL = "https://api.github.com"
+ORG = "Genymobile"
+PROJECTS = ("genymotion-binocle",
+           )
