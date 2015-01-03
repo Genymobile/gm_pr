@@ -13,8 +13,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'gm_pr.db',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
@@ -116,6 +116,12 @@ TEMPLATE_DIRS = (
     os.path.join( os.path.abspath(os.path.dirname(__file__)), 'templates/'),
 )
 
+CELERY_ACCEPT_CONTENT = ['json', 'yaml']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_IMPORTS = ("bot.tasks", "gm_pr.prs")
+BROKER_URL = 'sqla+sqlite:///celerydb.sqlite'
+
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -127,7 +133,8 @@ INSTALLED_APPS = (
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    "gm_pr_app",
+    'djcelery',
+    "web",
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
