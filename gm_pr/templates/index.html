@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Projects</h1>
+
+{% for project in project_list %}
+<p><a href="?project={{project}}">{{project}}</a></p>
+{% endfor %}
+{% endblock %}

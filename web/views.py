@@ -8,6 +8,10 @@ from gm_pr.PrFetcher import PrFetcher
 import time
 
 def index(request):
+    if not request.GET :
+        context = {'project_list' : settings.PROJECTS_CHAN.keys()}
+        return render(request, 'index.html', context)
+
     projects, channel = chan_proj.chan_proj(request)
 
     if projects != None:
