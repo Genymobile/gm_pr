@@ -7,7 +7,7 @@ def index(request):
     projects, channel_name = chan_proj.chan_proj(request)
     if projects != None:
         tasks.slack.delay(settings.TOP_LEVEL_URL, settings.ORG,
-                          "%s?channel_name=%s" % (settings.WEB_URL, channel_name),
+                          "%s?project=%s" % (settings.WEB_URL, channel_name),
                           projects,
                           settings.SLACK_URL,
                           "#%s" % channel_name)
