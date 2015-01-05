@@ -29,15 +29,14 @@ def fetch_data(project_name, url, org):
         return
     for jpr in jdata:
         if jpr['state'] == 'open':
-            comment_json = get_json(jpr['comments_url'])
-            review_json = get_json(jpr['review_comments_url'])
-
+            detail_json = get_json(jpr['url'])
             pr = models.Pr(url=jpr['html_url'],
                            title=jpr['title'],
                            updated_at=jpr['updated_at'],
                            user=jpr['user']['login'],
                            repo=jpr['base']['repo']['full_name'],
-                           nbreview=len(review_json) + len(comment_json))
+                           nbreview=int(detail_json['comments']) + \
+                                    int(detail_json['review_comments']))
             pr_list.append(pr)
 
     sorted(pr_list, key=lambda pr: pr.updated_at)
