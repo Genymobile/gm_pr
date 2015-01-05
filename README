@@ -16,3 +16,8 @@ Script setup
   * Configure the github login / password
 
   * WEB_URL is where you deployed this django app
+
+Docker cmd:
+  something like:
+
+    docker run --name=gm_pr -d -p 4280:8000 -v /var/www/gm_pr:/var/www/gm_pr gm_pr
