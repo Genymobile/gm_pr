@@ -29,7 +29,7 @@ def slack(url, org, weburl, project, slack, channel):
 
 
     payload = {"channel": channel,
-               "username": "gm_pr",
+               "username": "genypr",
                "text": txt,
                "icon_emoji": ":Y:"}
 
