@@ -25,7 +25,7 @@ def slack(url, org, weburl, project, slack, channel):
         for proj in project_list:
             txt += "*%s*\n" % proj['name']
             for pr in proj['pr_list']:
-                txt += "<%s|%s> %s %d\n" % (pr.url, pr.title, pr.user, pr.nbreview)
+                txt += "<%s|%s> %s review:%d LGTM:%d :+1::%d\n" % (pr.url, pr.title, pr.user, pr.nbreview, pr.lgtm, pr.plusone)
 
 
     payload = {"channel": channel,

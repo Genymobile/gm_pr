@@ -6,7 +6,7 @@
 <h2>{{project.name}}</h2>
 <ul>
 {% for pr in project.pr_list %}
-    <li><a href="{{pr.url}}">{{pr.title}}</a> <span class="user">{{pr.user}}</span> <span class="nbrev">{{pr.nbreview}}</span></li>
+    <li><a href="{{pr.url}}">{{pr.title}}</a> <span class="user">{{pr.user}}</span> <span class="nbrev">number of review:</span> {{pr.nbreview}} <span class="lgtm">number of LGTM:</span> {{pr.lgtm}} <span class="plusone">number of plusone:</span> {{pr.plusone}} </li>
 {% endfor %}
 </ul>
 {% endfor %}

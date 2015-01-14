@@ -3,6 +3,7 @@ from celery import group
 from gm_pr.celery import app
 
 import json, urllib.request
+import re
 
 def get_json(url):
     """ get json data from url.
@@ -30,13 +31,24 @@ def fetch_data(project_name, url, org):
     for jpr in jdata:
         if jpr['state'] == 'open':
             detail_json = get_json(jpr['url'])
+            comment_json = get_json(detail_json['comments_url'])
+            plusone = 0
+            lgtm = 0
+            for jcomment in comment_json:
+                body = jcomment['body']
+                if re.search(":\+1:", body):
+                    plusone += 1
+                if re.search("LGTM", body, re.IGNORECASE):
+                    lgtm += 1
             pr = models.Pr(url=jpr['html_url'],
                            title=jpr['title'],
                            updated_at=jpr['updated_at'],
                            user=jpr['user']['login'],
                            repo=jpr['base']['repo']['full_name'],
                            nbreview=int(detail_json['comments']) + \
-                                    int(detail_json['review_comments']))
+                                    int(detail_json['review_comments']),
+                           plusone=plusone,
+                           lgtm=lgtm)
             pr_list.append(pr)
 
     sorted(pr_list, key=lambda pr: pr.updated_at)
