@@ -31,6 +31,6 @@ def slack(url, org, weburl, project, slack, channel):
     payload = {"channel": channel,
                "username": "genypr",
                "text": txt,
-               "icon_emoji": ":Y:"}
+               "icon_emoji": ":y:"}
 
     urllib.request.urlopen(slack, json.dumps(payload).encode('utf-8'))
