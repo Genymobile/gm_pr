@@ -24,4 +24,4 @@ def index(request):
         print(after - before)
         return render(request, 'pr.html', context)
     else:
-        return HttpResponse("No project found\n", status=404)
+        return HttpResponse("No projects found\n", status=404)
