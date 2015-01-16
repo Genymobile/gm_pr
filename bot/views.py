@@ -13,4 +13,4 @@ def index(request):
                           "#%s" % channel_name)
         return HttpResponse("One moment, Octocat is considering your request\n")
     else:
-        return HttpResponse("No project found\n", status=404)
+        return HttpResponse("No projects found\n", status=404)
