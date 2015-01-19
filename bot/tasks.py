@@ -25,12 +25,12 @@ def slack(url, org, weburl, project, slack, channel):
         for proj in project_list:
             txt += "*%s*\n" % proj['name']
             for pr in proj['pr_list']:
-                txt += "<%s|" % (pr.url)
+                txt += "<%s|%s> -" % (pr.url, pr.title)
                 if pr.milestone is not None:
-                    txt += "*%s*|" % (pr.milestone)
+                    txt += " *%s* -" % (pr.milestone)
                 if pr.label is not None:
-                    txt += "*%s*|" % (pr.label.name)
-                txt += "%s> %s review:%d LGTM:%d :+1::%d\n" % (pr.title, pr.user, pr.nbreview, pr.lgtm, pr.plusone)
+                    txt += " *%s* -" % (pr.label.name)
+                txt += " %s review:%d LGTM:%d :+1::%d\n" % (pr.user, pr.nbreview, pr.lgtm, pr.plusone)
 
 
     payload = {"channel": channel,
