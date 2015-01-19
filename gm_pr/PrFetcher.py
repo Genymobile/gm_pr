@@ -43,7 +43,7 @@ def fetch_data(project_name, url, org):
                     plusone += 1
                 if re.search("LGTM", body, re.IGNORECASE):
                     lgtm += 1
-            if milestone is not None:
+            if milestone:
                 milestone = milestone['title']
             if len(label_json) > 0:
                 label = {'name' : label_json[0]['name'],
