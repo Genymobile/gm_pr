@@ -7,10 +7,10 @@
 <ul>
 {% for pr in project.pr_list %}
     <li>
-        {% if pr.milestone != None %}
+        {% if pr.milestone %}
             <span class="milestone">{{pr.milestone}}</span> |
         {% endif %}
-        {% if pr.label != None %}
+        {% if pr.label %}
             <span style="color:#{{pr.label.color}}" class="label">{{pr.label.name}}</span> |
         {% endif %}
         <a href="{{pr.url}}">{{pr.title}}</a> <span class="user">{{pr.user}}</span> <span class="nbrev">number of review:</span> {{pr.nbreview}} <span class="lgtm">number of LGTM:</span> {{pr.lgtm}} <span class="plusone">number of plusone:</span> {{pr.plusone}}
