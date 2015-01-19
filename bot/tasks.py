@@ -29,7 +29,7 @@ def slack(url, org, weburl, project, slack, channel):
                 if pr.milestone:
                     txt += " *%s* -" % (pr.milestone)
                 if pr.label:
-                    txt += " *%s* -" % (pr.label.name)
+                    txt += " *%s* -" % (pr.label['name'])
                 txt += " %s review:%d LGTM:%d :+1::%d\n" % (pr.user, pr.nbreview, pr.lgtm, pr.plusone)
 
 
