@@ -34,12 +34,21 @@ def fetch_data(project_name, url, org):
             comment_json = get_json(detail_json['comments_url'])
             plusone = 0
             lgtm = 0
+            milestone = jpr['milestone']
+            label_json = get_json(jpr['issue_url'] + '/labels')
+            label = None
             for jcomment in comment_json:
                 body = jcomment['body']
                 if re.search(":\+1:", body):
                     plusone += 1
                 if re.search("LGTM", body, re.IGNORECASE):
                     lgtm += 1
+            if milestone is not None:
+                milestone = milestone['title']
+            if len(label_json) > 0:
+                label = {'name' : label_json[0]['name'],
+                         'color' : label_json[0]['color'],
+                        }
             pr = models.Pr(url=jpr['html_url'],
                            title=jpr['title'],
                            updated_at=jpr['updated_at'],
@@ -48,7 +57,9 @@ def fetch_data(project_name, url, org):
                            nbreview=int(detail_json['comments']) + \
                                     int(detail_json['review_comments']),
                            plusone=plusone,
-                           lgtm=lgtm)
+                           lgtm=lgtm,
+                           milestone=milestone,
+                           label=label)
             pr_list.append(pr)
 
     sorted(pr_list, key=lambda pr: pr.updated_at)
