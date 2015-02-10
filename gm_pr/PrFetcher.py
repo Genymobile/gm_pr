@@ -14,7 +14,7 @@ def fetch_data(project_name, url, org):
               }
     url = "%s/repos/%s/%s/pulls" % (url, org, project_name)
     jdata = PaginableJson.PaginableJson(url)
-    if len(jdata) == 0:
+    if not jdata:
         return
     for jpr in jdata:
         if jpr['state'] == 'open':
@@ -25,6 +25,7 @@ def fetch_data(project_name, url, org):
             milestone = jpr['milestone']
             label_json = PaginableJson.PaginableJson(jpr['issue_url'] + '/labels')
             label = None
+            # look for tags only in main conversion and not in "file changed"
             for jcomment in comment_json:
                 body = jcomment['body']
                 if re.search(":\+1:", body):
@@ -33,7 +34,7 @@ def fetch_data(project_name, url, org):
                     lgtm += 1
             if milestone:
                 milestone = milestone['title']
-            if len(label_json) > 0:
+            if label_json:
                 label = {'name' : label_json[0]['name'],
                          'color' : label_json[0]['color'],
                         }
@@ -52,7 +53,7 @@ def fetch_data(project_name, url, org):
 
     sorted(pr_list, key=lambda pr: pr.updated_at)
 
-    if len(pr_list) == 0:
+    if not pr_list:
         return None
     return project
 
