@@ -13,6 +13,9 @@
         {% for label in pr.labels %}
             <span style="background-color:#{{label.color}}" class="label">{{label.name}}</span> |
         {% endfor %}
+        {% if pr.is_old %}
+            <span class="old">OLD</span> |
+        {% endif %}
         <a href="{{pr.url}}">{{pr.title}}</a> <span class="user">{{pr.user}}</span> <span class="nbrev">number of review:</span> {{pr.nbreview}} <span class="lgtm">number of LGTM:</span> {{pr.lgtm}} <span class="plusone">number of plusone:</span> {{pr.plusone}}
     </li>
 {% endfor %}
