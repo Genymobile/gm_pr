@@ -1,20 +1,8 @@
-from gm_pr import models
+from gm_pr import models, PaginableJson
 from celery import group
 from gm_pr.celery import app
 
-import json, urllib.request
 import re
-
-def get_json(url):
-    """ get json data from url.
-    Auth is managed in __init__.py in this module
-    """
-    response = urllib.request.urlopen(url)
-    charset = response.info().get_content_charset()
-    if charset == None:
-        charset = 'utf-8'
-    string = response.read().decode(charset)
-    return json.loads(string)
 
 @app.task
 def fetch_data(project_name, url, org):
@@ -25,18 +13,19 @@ def fetch_data(project_name, url, org):
                'pr_list' : pr_list,
               }
     url = "%s/repos/%s/%s/pulls" % (url, org, project_name)
-    jdata = get_json(url)
-    if len(jdata) == 0:
+    jdata = PaginableJson.PaginableJson(url)
+    if not jdata:
         return
     for jpr in jdata:
         if jpr['state'] == 'open':
-            detail_json = get_json(jpr['url'])
-            comment_json = get_json(detail_json['comments_url'])
+            detail_json = PaginableJson.PaginableJson(jpr['url'])
+            comment_json = PaginableJson.PaginableJson(detail_json['comments_url'])
             plusone = 0
             lgtm = 0
             milestone = jpr['milestone']
-            label_json = get_json(jpr['issue_url'] + '/labels')
+            label_json = PaginableJson.PaginableJson(jpr['issue_url'] + '/labels')
             label = None
+            # look for tags only in main conversion and not in "file changed"
             for jcomment in comment_json:
                 body = jcomment['body']
                 if re.search(":\+1:", body):
@@ -45,7 +34,7 @@ def fetch_data(project_name, url, org):
                     lgtm += 1
             if milestone:
                 milestone = milestone['title']
-            if len(label_json) > 0:
+            if label_json:
                 label = {'name' : label_json[0]['name'],
                          'color' : label_json[0]['color'],
                         }
@@ -64,7 +53,7 @@ def fetch_data(project_name, url, org):
 
     sorted(pr_list, key=lambda pr: pr.updated_at)
 
-    if len(pr_list) == 0:
+    if not pr_list:
         return None
     return project
 
