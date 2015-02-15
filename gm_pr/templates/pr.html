@@ -10,9 +10,9 @@
         {% if pr.milestone %}
             <span class="milestone">{{pr.milestone}}</span> |
         {% endif %}
-        {% if pr.label %}
-            <span style="background-color:#{{pr.label.color}}" class="label">{{pr.label.name}}</span> |
-        {% endif %}
+        {% for label in pr.labels %}
+            <span style="background-color:#{{label.color}}" class="label">{{label.name}}</span> |
+        {% endfor %}
         <a href="{{pr.url}}">{{pr.title}}</a> <span class="user">{{pr.user}}</span> <span class="nbrev">number of review:</span> {{pr.nbreview}} <span class="lgtm">number of LGTM:</span> {{pr.lgtm}} <span class="plusone">number of plusone:</span> {{pr.plusone}}
     </li>
 {% endfor %}

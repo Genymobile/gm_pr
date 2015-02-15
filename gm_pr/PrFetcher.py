@@ -24,7 +24,13 @@ def fetch_data(project_name, url, org):
             lgtm = 0
             milestone = jpr['milestone']
             label_json = PaginableJson.PaginableJson(jpr['issue_url'] + '/labels')
-            label = None
+            labels = list()
+            if label_json:
+                for lbl in label_json:
+                    labels.append({'name' : lbl['name'],
+                                   'color' : lbl['color'],
+                               })
+
             # look for tags only in main conversion and not in "file changed"
             for jcomment in comment_json:
                 body = jcomment['body']
@@ -34,10 +40,6 @@ def fetch_data(project_name, url, org):
                     lgtm += 1
             if milestone:
                 milestone = milestone['title']
-            if label_json:
-                label = {'name' : label_json[0]['name'],
-                         'color' : label_json[0]['color'],
-                        }
             pr = models.Pr(url=jpr['html_url'],
                            title=jpr['title'],
                            updated_at=jpr['updated_at'],
@@ -48,7 +50,7 @@ def fetch_data(project_name, url, org):
                            plusone=plusone,
                            lgtm=lgtm,
                            milestone=milestone,
-                           label=label)
+                           labels=labels)
             pr_list.append(pr)
 
     sorted(pr_list, key=lambda pr: pr.updated_at)
