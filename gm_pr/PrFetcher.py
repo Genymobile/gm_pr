@@ -1,8 +1,9 @@
-from gm_pr import models, PaginableJson
+from gm_pr import models, PaginableJson, settings
 from celery import group
 from gm_pr.celery import app
 
 import re
+from datetime import datetime
 
 @app.task
 def fetch_data(project_name, url, org):
@@ -14,6 +15,7 @@ def fetch_data(project_name, url, org):
               }
     url = "%s/repos/%s/%s/pulls" % (url, org, project_name)
     jdata = PaginableJson.PaginableJson(url)
+    now = datetime.now()
     if not jdata:
         return
     for jpr in jdata:
@@ -24,7 +26,24 @@ def fetch_data(project_name, url, org):
             lgtm = 0
             milestone = jpr['milestone']
             label_json = PaginableJson.PaginableJson(jpr['issue_url'] + '/labels')
-            label = None
+            labels = list()
+            if label_json:
+                for lbl in label_json:
+                    labels.append({'name' : lbl['name'],
+                                   'color' : lbl['color'],
+                               })
+
+            date = datetime.strptime(detail_json['updated_at'], '%Y-%m-%dT%H:%M:%SZ')
+            is_old = False
+            if (now - date).days >= settings.OLD_PERIOD:
+                if not labels and None in settings.OLD_LABELS:
+                    is_old = True
+                else:
+                    for lbl in labels:
+                        if lbl['name'] in settings.OLD_LABELS:
+                            is_old = True
+                            break
+
             # look for tags only in main conversion and not in "file changed"
             for jcomment in comment_json:
                 body = jcomment['body']
@@ -34,10 +53,6 @@ def fetch_data(project_name, url, org):
                     lgtm += 1
             if milestone:
                 milestone = milestone['title']
-            if label_json:
-                label = {'name' : label_json[0]['name'],
-                         'color' : label_json[0]['color'],
-                        }
             pr = models.Pr(url=jpr['html_url'],
                            title=jpr['title'],
                            updated_at=jpr['updated_at'],
@@ -48,7 +63,8 @@ def fetch_data(project_name, url, org):
                            plusone=plusone,
                            lgtm=lgtm,
                            milestone=milestone,
-                           label=label)
+                           labels=labels,
+                           is_old=is_old)
             pr_list.append(pr)
 
     sorted(pr_list, key=lambda pr: pr.updated_at)
