@@ -28,8 +28,8 @@ def slack(url, org, weburl, project, slack, channel):
                 txt += "<%s|%s> -" % (pr.url, pr.title)
                 if pr.milestone:
                     txt += " *%s* -" % (pr.milestone)
-                if pr.label:
-                    txt += " *%s* -" % (pr.label['name'])
+                for label in pr.labels:
+                    txt += " *%s* -" % (label['name'])
                 txt += " %s review:%d LGTM:%d :+1::%d\n" % (pr.user, pr.nbreview, pr.lgtm, pr.plusone)
 
 
