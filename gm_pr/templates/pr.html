@@ -3,22 +3,39 @@
 <h1>Current PR</h1>
 
 {% for project in project_list %}
-<h2>{{project.name}}</h2>
-<ul>
-{% for pr in project.pr_list %}
-    <li>
-        {% if pr.milestone %}
-            <span class="milestone">{{pr.milestone}}</span> |
-        {% endif %}
-        {% for label in pr.labels %}
-            <span style="background-color:#{{label.color}}" class="label">{{label.name}}</span> |
+<div class="project-box">
+    <div class="project">
+        <div class="project-name">{{project.name}}</div>
+        <table class="project">
+            <tr>
+                <th>Milestone</th>
+                <th>Labels</th>
+                <th>OLD?</th>
+                <th>Title</th>
+                <th>User</th>
+                <th>Reviews</th>
+                <th>LGTM</th>
+                <th>+1</th>
+            </tr>
+        {% for pr in project.pr_list %}
+            <tr class="pr">
+                <td class="milestone">{% if pr.milestone %}{{pr.milestone}}{% endif %}</td>
+                <td class="label">
+                {% for label in pr.labels %}
+                    <span style="background-color:#{{label.color}}">{{label.name}}</span>
+                {% endfor %}
+                </td>
+                <td class="old">{% if pr.is_old %}<span class="highlight">OLD</span>{% endif %}</td>
+                <td class="title"><a href="{{pr.url}}">{{pr.title}}</a></td>
+                <td class="user">{{pr.user}}</td>
+                <td class="nbrev">{{pr.nbreview}}</td>
+                <td class="lgtm">{{pr.lgtm}}</td> 
+                <td class="plusone">{{pr.plusone}}</td>
+            </tr>
         {% endfor %}
-        {% if pr.is_old %}
-            <span class="old">OLD</span> |
-        {% endif %}
-        <a href="{{pr.url}}">{{pr.title}}</a> <span class="user">{{pr.user}}</span> <span class="nbrev">number of review:</span> {{pr.nbreview}} <span class="lgtm">number of LGTM:</span> {{pr.lgtm}} <span class="plusone">number of plusone:</span> {{pr.plusone}}
-    </li>
-{% endfor %}
-</ul>
+        </table>
+    </div>
+</div>
+<p>
 {% endfor %}
 {% endblock %}

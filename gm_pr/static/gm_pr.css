@@ -1,0 +1,77 @@
+body {
+  text-align: center;
+}
+.project-box {
+  box-shadow: 2px 2px 5px #333;
+  display: inline-block;
+  text-align: left;
+}
+.project {
+  text-align: left;
+  display: inline-block;
+  padding: 2px;
+}
+th {
+  background-color: #447e1d;
+  color: white;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+tr:nth-child(even) {
+  background: #ffffff;
+}
+tr:nth-child(odd) {
+  background: #f0f0f0;
+}
+td a:link, td a.active:link, td a:hover, td a:visited {
+  color: #447e1d;
+  text-decoration: none;
+}
+td a:hover {
+  color: #84be5d;
+}
+.project-name {
+  font-size: 1.3em;
+  font-family: sans-serif;
+  font-weight: bold;
+  padding-left: 2px;
+  padding-right: 2px;
+  background-color: #d3dfd3;
+}
+.milestone {
+  color: grey;
+  font-weight:bold;
+  width: 100px;
+}
+.label {
+  font-weight:bold;
+  width: 250px;
+}
+.old{
+  width: 50px;
+}
+.highlight{
+  font-weight:bold;
+  background-color:#f2ed00
+}
+.title{
+  width: 400px;
+}
+.user{
+  width: 150px;
+}
+.nbrev {
+  color: red;
+  text-align: center;
+  width: 20px;
+}
+.lgtm {
+  color: blue;
+  text-align: center;
+  width: 20px;
+}
+.plusone {
+  color: green;
+  text-align: center;
+  width: 20px;
+}

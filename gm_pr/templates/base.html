@@ -1,32 +1,11 @@
-<!DOCTYPE html>
+<!DOCTYPE html public "-//W3C//DTD HTML 4.0//EN">
 <html lang="en">
-  <style>
-    .nbrev {
-       color: red;
-    }
-    .lgtm {
-      color: blue;
-    }
-    .plusone {
-      color: green;
-    }
-    .milestone {
-      color: grey;
-      font-weight:bold;
-    }
-    .label {
-      font-weight:bold;
-    }
-    .old {
-      font-weight:bold;
-      background-color:#f2ed00
-    }
-  </style>
-<head>
-  <title>{% block title %}GM PR{% endblock %}</title>
-</head>
-
-<body>
+  <head>
+    <title>{% block title %}GM PR{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="/static/gm_pr.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body>
   {% block content %}{% endblock %}
-</body>
+  </body>
 </html>
