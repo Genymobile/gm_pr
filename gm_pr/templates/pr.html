@@ -22,7 +22,7 @@
                 <td class="milestone">{% if pr.milestone %}{{pr.milestone}}{% endif %}</td>
                 <td class="label">
                 {% for label in pr.labels %}
-                    <span style="background-color:#{{label.color}}">{{label.name}}</span>
+                    <span class="labelname" style="background-color:#{{label.color}}">{{label.name}}</span>
                 {% endfor %}
                 </td>
                 <td class="old">{% if pr.is_old %}<span class="highlight">OLD</span>{% endif %}</td>

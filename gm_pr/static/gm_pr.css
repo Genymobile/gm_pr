@@ -47,6 +47,13 @@ td a:hover {
   font-weight:bold;
   width: 250px;
 }
+.labelname {
+  font-size: 0.7em;
+  box-shadow: 1px 1px 2px #333;
+  font-family: sans-serif;
+  padding: 1px;
+  color: #333;
+}
 .old{
   width: 50px;
 }
