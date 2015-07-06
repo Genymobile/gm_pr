@@ -1,6 +1,7 @@
 # Django settings for gm_pr project.
 
 import os
+from gm_pr.settings_projects import *
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -165,24 +166,3 @@ LOGGING = {
         },
     }
 }
-
-GITHUB_OAUTHTOKEN="xxxx"
-#web version (for slack redirection)
-WEB_URL = "http://www.example.org/gm_pr/"
-SLACK_TOKEN = "xxxxx"
-SLACK_URL = "https://hooks.slack.com/services/xxxxx"
-
-TOP_LEVEL_URL = "https://api.github.com"
-ORG = "Genymobile"
-# Number of days a PRs without update can be flagged as OLD.
-OLD_PERIOD=4
-# only PRs with one of those labels can be considered as OLD.
-# Use None for "no label"
-OLD_LABELS=("Needs Reviews", None)
-
-PROJECTS_CHAN = \
-    { 'general' : ("genymotion-binocle",
-                  ),
-      'random' : ('FridgeCheckup',
-                 ),
-    }
