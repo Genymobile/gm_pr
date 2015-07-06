@@ -9,7 +9,7 @@ import time
 
 def index(request):
     if not request.GET :
-        context = {'project_list' : settings.PROJECTS_CHAN.keys()}
+        context = {'title': "Project list", 'project_list' : settings.PROJECTS_CHAN.keys()}
         return render(request, 'index.html', context)
 
     projects, channel = chan_proj.chan_proj(request)
@@ -18,7 +18,7 @@ def index(request):
         before = time.time()
 
         prf = PrFetcher(settings.TOP_LEVEL_URL, settings.ORG, projects)
-        context = {"project_list" : prf.get_prs()}
+        context = {"title" : channel + " PR list", "project_list" : prf.get_prs()}
 
         after = time.time()
         print(after - before)
