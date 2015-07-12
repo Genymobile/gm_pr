@@ -166,8 +166,7 @@ LOGGING = {
     }
 }
 
-GITHUB_LOGIN = "foo@genymobile.com"
-GITHUB_PASSWORD = "password"
+GITHUB_OAUTHTOKEN="xxxx"
 #web version (for slack redirection)
 WEB_URL = "http://www.example.org/gm_pr/"
 SLACK_TOKEN = "xxxxx"
