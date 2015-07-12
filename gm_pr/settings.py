@@ -168,10 +168,10 @@ LOGGING = {
 
 GITHUB_LOGIN = "foo@genymobile.com"
 GITHUB_PASSWORD = "password"
-#web version
-WEB_URL = "http://jenkins.genymobile.com/gm_pr/"
-SLACK_TOKEN = "s9Wdn8diWL8bGItBNL1SuEIz"
-SLACK_URL = "https://hooks.slack.com/services/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"
+#web version (for slack redirection)
+WEB_URL = "http://www.example.org/gm_pr/"
+SLACK_TOKEN = "xxxxx"
+SLACK_URL = "https://hooks.slack.com/services/xxxxx"
 
 TOP_LEVEL_URL = "https://api.github.com"
 ORG = "Genymobile"
