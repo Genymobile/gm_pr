@@ -5,6 +5,15 @@ from gm_pr.celery import app
 import re
 from datetime import datetime
 
+
+# return true if the given html hex color string is a "light" color
+def is_color_light(rgb_hex_color_string):
+    r, g, b = rgb_hex_color_string[:2], rgb_hex_color_string[2:4], rgb_hex_color_string[4:]
+    r, g, b = [int(n, 16) for n in (r, g, b)]
+    # https://en.wikipedia.org/wiki/Relative_luminance
+    y = (0.2126 * r) + (0.7152 * g) + (0.0722 * b)
+    return (y > 128)
+
 @app.task
 def fetch_data(project_name, url, org):
     """ Celery task, call github api
@@ -29,8 +38,10 @@ def fetch_data(project_name, url, org):
             labels = list()
             if label_json:
                 for lbl in label_json:
+                    label_style = 'light' if is_color_light(lbl['color']) else 'dark'
                     labels.append({'name' : lbl['name'],
                                    'color' : lbl['color'],
+                                   'style' : label_style
                                })
 
             date = datetime.strptime(detail_json['updated_at'], '%Y-%m-%dT%H:%M:%SZ')
