@@ -66,7 +66,7 @@ def fetch_data(project_name, url, org):
                 milestone = milestone['title']
             pr = models.Pr(url=jpr['html_url'],
                            title=jpr['title'],
-                           updated_at=jpr['updated_at'],
+                           updated_at=date,
                            user=jpr['user']['login'],
                            repo=jpr['base']['repo']['full_name'],
                            nbreview=int(detail_json['comments']) + \

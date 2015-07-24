@@ -38,6 +38,9 @@ td a:hover {
   padding-right: 2px;
   background-color: #d3dfd3;
 }
+.last-update {
+ width: 150px;
+}
 .milestone {
   color: grey;
   font-weight:bold;
