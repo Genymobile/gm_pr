@@ -1,6 +1,7 @@
 from gm_pr import models, PaginableJson, settings
 from celery import group
 from gm_pr.celery import app
+from operator import attrgetter
 
 import re
 from datetime import datetime
@@ -78,7 +79,7 @@ def fetch_data(project_name, url, org):
                            is_old=is_old)
             pr_list.append(pr)
 
-    sorted(pr_list, key=lambda pr: pr.updated_at)
+    project['pr_list'] = sorted(pr_list, key=attrgetter('updated_at'), reverse=True)
 
     if not pr_list:
         return None
