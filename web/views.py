@@ -18,7 +18,10 @@ def index(request):
         before = time.time()
 
         prf = PrFetcher(settings.TOP_LEVEL_URL, settings.ORG, projects)
-        context = {"title" : channel + " PR list", "project_list" : prf.get_prs()}
+        context = {"title" : channel + " PR list", "project_list" : prf.get_prs(),
+                   "feedback_ok" : settings.FEEDBACK_OK,
+                   "feedback_weak" : settings.FEEDBACK_WEAK,
+                   "feedback_ko" : settings.FEEDBACK_KO}
 
         after = time.time()
         print(after - before)

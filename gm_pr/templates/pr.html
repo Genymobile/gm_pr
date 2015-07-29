@@ -15,8 +15,9 @@
                 <th>Title</th>
                 <th>User</th>
                 <th>Reviews</th>
-                <th>LGTM</th>
-                <th>+1</th>
+                <th>{{feedback_ok}}</th>
+                <th>{{feedback_weak}}</th>
+                <th>{{feedback_ko}}</th>
             </tr>
         {% for pr in project.pr_list %}
             <tr class="pr">
@@ -31,8 +32,9 @@
                 <td class="title"><a href="{{pr.url}}">{{pr.title}}</a></td>
                 <td class="user">{{pr.user}}</td>
                 <td class="nbrev">{{pr.nbreview}}</td>
-                <td class="lgtm">{{pr.lgtm}}</td> 
-                <td class="plusone">{{pr.plusone}}</td>
+                <td class="feedback_ok">{{pr.feedback_ok}}</td>
+                <td class="feedback_weak">{{pr.feedback_weak}}</td>
+                <td class="feedback_ko">{{pr.feedback_ko}}</td>
             </tr>
         {% endfor %}
         </table>

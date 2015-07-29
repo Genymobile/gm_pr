@@ -32,8 +32,9 @@ def fetch_data(project_name, url, org):
         if jpr['state'] == 'open':
             detail_json = PaginableJson.PaginableJson(jpr['url'])
             comment_json = PaginableJson.PaginableJson(detail_json['comments_url'])
-            plusone = 0
-            lgtm = 0
+            feedback_ok = 0
+            feedback_weak = 0
+            feedback_ko = 0
             milestone = jpr['milestone']
             label_json = PaginableJson.PaginableJson(jpr['issue_url'] + '/labels')
             labels = list()
@@ -59,10 +60,12 @@ def fetch_data(project_name, url, org):
             # look for tags only in main conversion and not in "file changed"
             for jcomment in comment_json:
                 body = jcomment['body']
-                if re.search(":\+1:", body):
-                    plusone += 1
-                if re.search("LGTM", body, re.IGNORECASE):
-                    lgtm += 1
+                if re.search(settings.FEEDBACK_OK, body):
+                    feedback_ok += 1
+                if re.search(settings.FEEDBACK_WEAK, body):
+                    feedback_weak += 1
+                if re.search(settings.FEEDBACK_KO, body):
+                    feedback_ko += 1
             if milestone:
                 milestone = milestone['title']
             pr = models.Pr(url=jpr['html_url'],
@@ -72,8 +75,9 @@ def fetch_data(project_name, url, org):
                            repo=jpr['base']['repo']['full_name'],
                            nbreview=int(detail_json['comments']) + \
                                     int(detail_json['review_comments']),
-                           plusone=plusone,
-                           lgtm=lgtm,
+                           feedback_ok=feedback_ok,
+                           feedback_weak=feedback_weak,
+                           feedback_ko=feedback_ko,
                            milestone=milestone,
                            labels=labels,
                            is_old=is_old)

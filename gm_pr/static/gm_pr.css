@@ -80,12 +80,17 @@ td a:hover {
   text-align: center;
   width: 20px;
 }
-.lgtm {
+.feedback_ko {
+  color: red;
+  text-align: center;
+  width: 20px;
+}
+.feedback_weak {
   color: blue;
   text-align: center;
   width: 20px;
 }
-.plusone {
+.feedback_ok {
   color: green;
   text-align: center;
   width: 20px;

@@ -4,6 +4,7 @@ import json
 import urllib.request
 from gm_pr.PrFetcher import PrFetcher
 from gm_pr.celery import app
+from gm_pr import settings
 
 @app.task
 def slack(url, org, weburl, project, slack, channel):
@@ -30,7 +31,11 @@ def slack(url, org, weburl, project, slack, channel):
                     txt += " *%s* -" % (pr.milestone)
                 for label in pr.labels:
                     txt += " *%s* -" % (label['name'])
-                txt += " %s review:%d LGTM:%d :+1::%d\n" % (pr.user, pr.nbreview, pr.lgtm, pr.plusone)
+                txt += " %s review:%d %s:%d %s:%d %s:%d\n" % \
+                       (pr.user, pr.nbreview,
+                        settings.FEEDBACK_OK, pr.feedback_ok,
+                        settings.FEEDBACK_WEAK, pr.feedback_weak,
+                        settings.FEEDBACK_KO, pr.feedback_ko)
 
 
     payload = {"channel": channel,

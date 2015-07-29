@@ -16,6 +16,10 @@ OLD_PERIOD=4
 # Use None for "no label"
 OLD_LABELS=("Needs Reviews", None)
 
+FEEDBACK_OK="LGTM"
+FEEDBACK_WEAK=":hand:"
+FEEDBACK_KO=":x:"
+
 PROJECTS_CHAN = \
     { 'general' : ("genymotion-binocle",
                   ),
