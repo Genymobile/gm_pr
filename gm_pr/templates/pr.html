@@ -11,7 +11,6 @@
                 <th>Last update</th>
                 <th>Milestone</th>
                 <th>Labels</th>
-                <th>OLD?</th>
                 <th>Title</th>
                 <th>User</th>
                 <th>Reviews</th>
@@ -20,14 +19,17 @@
             </tr>
         {% for pr in project.pr_list %}
             <tr class="pr">
-                <td class="last-update">{{pr.updated_at|naturaltime}}</td>
+                {% if pr.is_old %}
+                    <td class="last-update highlight">{{pr.updated_at|naturaltime}}</td>
+                {% else %}
+                    <td class="last-update">{{pr.updated_at|naturaltime}}</td>
+                {% endif %}
                 <td class="milestone">{% if pr.milestone %}{{pr.milestone}}{% endif %}</td>
                 <td class="label">
                 {% for label in pr.labels %}
                     <span class="labelname labelname-{{label.style}}" style="background-color:#{{label.color}}">{{label.name}}</span>
                 {% endfor %}
                 </td>
-                <td class="old">{% if pr.is_old %}<span class="highlight">OLD</span>{% endif %}</td>
                 <td class="title"><a href="{{pr.url}}">{{pr.title}}</a></td>
                 <td class="user">{{pr.user}}</td>
                 <td class="nbrev">{{pr.nbreview}}</td>
