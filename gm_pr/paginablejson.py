@@ -1,6 +1,5 @@
 import json, urllib.request
 
-
 class PaginableJson:
     """ fetch json data with automatic pagination
     Auth is managed in __init__.py in this module
@@ -14,6 +13,8 @@ class PaginableJson:
 
         response = urllib.request.urlopen(url)
         charset = response.info().get_content_charset()
+        if charset == None:
+            charset = 'utf-8'
 
         if 'Link' in response.info():
             #pagination
@@ -27,9 +28,6 @@ class PaginableJson:
         else:
             #no pagination
             self.__next_url = None
-
-        if charset == None:
-            charset = 'utf-8'
 
         self.__data = json.loads(response.read().decode(charset))
 

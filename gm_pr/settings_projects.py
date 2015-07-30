@@ -22,7 +22,7 @@ FEEDBACK_OK={"keyword": "LGTM", "name" : "LGTM"}
 FEEDBACK_WEAK={"keyword" : ":hand:", "name" : "&#9995;"}
 FEEDBACK_KO={"keyword": ":x:", "name" :"&#10007;"}
 
-PROJECTS_CHAN = \
+PROJECTS_REPOS = \
     { 'general' : ("genymotion-binocle",
                   ),
       'random' : ('FridgeCheckup',

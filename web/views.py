@@ -3,22 +3,24 @@
 
 from django.shortcuts import render
 from django.http import HttpResponse
-from gm_pr import settings, chan_proj
-from gm_pr.PrFetcher import PrFetcher
+from gm_pr import settings, proj_repo
+from gm_pr.prfetcher import PrFetcher
 import time
 
 def index(request):
-    if not request.GET :
-        context = {'title': "Project list", 'project_list' : settings.PROJECTS_CHAN.keys()}
+    if not request.GET:
+        context = {'title': "Project list",
+                   'project_list' : settings.PROJECTS_REPOS.keys()}
         return render(request, 'index.html', context)
 
-    projects, channel = chan_proj.chan_proj(request)
+    project, repos = proj_repo.proj_repo(request)
 
-    if projects != None:
+    if repos != None:
         before = time.time()
 
-        prf = PrFetcher(settings.TOP_LEVEL_URL, settings.ORG, projects)
-        context = {"title" : channel + " PR list", "project_list" : prf.get_prs(),
+        prf = PrFetcher(settings.TOP_LEVEL_URL, settings.ORG, repos)
+        context = {"title" : "%s PR list" % project,
+                   "project_list" : prf.get_prs(),
                    "feedback_ok" : settings.FEEDBACK_OK['name'],
                    "feedback_weak" : settings.FEEDBACK_WEAK['name'],
                    "feedback_ko" : settings.FEEDBACK_KO['name']}

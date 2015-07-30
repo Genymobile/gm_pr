@@ -117,7 +117,7 @@ TEMPLATE_DIRS = (
 
 CELERY_ACCEPT_CONTENT = ['json', 'yaml']
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_IMPORTS = ("bot.tasks", "gm_pr.PrFetcher")
+CELERY_IMPORTS = ("bot.tasks", "gm_pr.prfetcher")
 BROKER_URL = 'sqla+sqlite:///celerydb.sqlite'
 
 

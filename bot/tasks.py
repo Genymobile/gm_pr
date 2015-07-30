@@ -2,15 +2,15 @@ from __future__ import absolute_import
 
 import json
 import urllib.request
-from gm_pr.PrFetcher import PrFetcher
+from gm_pr.prfetcher import PrFetcher
 from gm_pr.celery import app
 from gm_pr import settings
 
 @app.task
-def slack(url, org, weburl, project, slack, channel):
+def slack(url, org, weburl, repos, slackurl, channel):
     """ Celery task, use github api and send result to slack
     """
-    prf = PrFetcher(url, org, project)
+    prf = PrFetcher(url, org, repos)
     project_list = prf.get_prs()
     nb_proj = len(project_list)
     total_pr = 0
@@ -43,4 +43,4 @@ def slack(url, org, weburl, project, slack, channel):
                "text": txt,
                "icon_emoji": ":y:"}
 
-    urllib.request.urlopen(slack, json.dumps(payload).encode('utf-8'))
+    urllib.request.urlopen(slackurl, json.dumps(payload).encode('utf-8'))
