@@ -39,7 +39,7 @@ td a:hover {
   background-color: #d3dfd3;
 }
 .last-update {
- width: 150px;
+ width: 200px;
 }
 .milestone {
   color: grey;
@@ -61,9 +61,6 @@ td a:hover {
 }
 .labelname-light {
   color: #000;
-}
-.old{
-  width: 50px;
 }
 .highlight{
   font-weight:bold;
