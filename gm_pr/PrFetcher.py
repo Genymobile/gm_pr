@@ -2,10 +2,10 @@ from gm_pr import models, PaginableJson, settings
 from celery import group
 from gm_pr.celery import app
 from operator import attrgetter
+from django.utils import dateparse
+from django.utils import timezone
 
 import re
-from datetime import datetime
-
 
 # return true if the given html hex color string is a "light" color
 def is_color_light(rgb_hex_color_string):
@@ -25,7 +25,7 @@ def fetch_data(project_name, url, org):
               }
     url = "%s/repos/%s/%s/pulls" % (url, org, project_name)
     jdata = PaginableJson.PaginableJson(url)
-    now = datetime.now()
+    now = timezone.now()
     if not jdata:
         return
     for jpr in jdata:
@@ -46,7 +46,7 @@ def fetch_data(project_name, url, org):
                                    'style' : label_style
                                })
 
-            date = datetime.strptime(detail_json['updated_at'], '%Y-%m-%dT%H:%M:%SZ')
+            date = dateparse.parse_datetime(detail_json['updated_at'])
             is_old = False
             if (now - date).days >= settings.OLD_PERIOD:
                 if not labels and None in settings.OLD_LABELS:
