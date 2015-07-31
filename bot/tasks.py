@@ -33,9 +33,9 @@ def slack(url, org, weburl, project, slack, channel):
                     txt += " *%s* -" % (label['name'])
                 txt += " %s review:%d %s:%d %s:%d %s:%d\n" % \
                        (pr.user, pr.nbreview,
-                        settings.FEEDBACK_OK, pr.feedback_ok,
-                        settings.FEEDBACK_WEAK, pr.feedback_weak,
-                        settings.FEEDBACK_KO, pr.feedback_ko)
+                        settings.FEEDBACK_OK['keyword'], pr.feedback_ok,
+                        settings.FEEDBACK_WEAK['keyword'], pr.feedback_weak,
+                        settings.FEEDBACK_KO['keyword'], pr.feedback_ko)
 
 
     payload = {"channel": channel,

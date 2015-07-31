@@ -60,11 +60,11 @@ def fetch_data(project_name, url, org):
             # look for tags only in main conversion and not in "file changed"
             for jcomment in comment_json:
                 body = jcomment['body']
-                if re.search(settings.FEEDBACK_OK, body):
+                if re.search(settings.FEEDBACK_OK['keyword'], body):
                     feedback_ok += 1
-                if re.search(settings.FEEDBACK_WEAK, body):
+                if re.search(settings.FEEDBACK_WEAK['keyword'], body):
                     feedback_weak += 1
-                if re.search(settings.FEEDBACK_KO, body):
+                if re.search(settings.FEEDBACK_KO['keyword'], body):
                     feedback_ko += 1
             if milestone:
                 milestone = milestone['title']

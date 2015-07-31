@@ -16,9 +16,11 @@ OLD_PERIOD=4
 # Use None for "no label"
 OLD_LABELS=("Needs Reviews", None)
 
-FEEDBACK_OK="LGTM"
-FEEDBACK_WEAK=":hand:"
-FEEDBACK_KO=":x:"
+# Feedback: The keyword is the text to search for in the github comments
+# The name is the web page column heading
+FEEDBACK_OK={"keyword": "LGTM", "name" : "LGTM"}
+FEEDBACK_WEAK={"keyword" : ":hand:", "name" : "&#9995;"}
+FEEDBACK_KO={"keyword": ":x:", "name" :"&#10007;"}
 
 PROJECTS_CHAN = \
     { 'general' : ("genymotion-binocle",
