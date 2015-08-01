@@ -1,94 +1,99 @@
 body {
-  text-align: center;
-  font-family: sans-serif;
+    text-align: center;
+    font-family: sans-serif;
 }
 .project-box {
-  box-shadow: 2px 2px 5px #333;
-  display: inline-block;
-  text-align: left;
+    box-shadow: 2px 2px 5px #333;
+    display: inline-block;
+    text-align: left;
 }
 .project {
-  text-align: left;
-  display: inline-block;
-  padding: 2px;
+    text-align: left;
+    display: inline-block;
+    padding: 2px;
 }
 th {
-  background-color: #447e1d;
-  color: white;
-  padding-left: 2px;
-  padding-right: 2px;
+    background-color: #447e1d;
+    color: white;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 tr:nth-child(even) {
-  background: #ffffff;
+    background: #ffffff;
 }
 tr:nth-child(odd) {
-  background: #f0f0f0;
+    background: #f0f0f0;
 }
-td{
-  padding: 0.2em;
+td {
+    padding: 0.2em;
 }
-td a:link, td a.active:link, td a:hover, td a:visited {
-  color: #447e1d;
-  text-decoration: none;
+td a:link,
+td a.active:link,
+td a:hover,
+td a:visited {
+    color: #447e1d;
+    text-decoration: none;
 }
 td a:hover {
-  color: #84be5d;
+    color: #84be5d;
 }
 .project-name {
-  font-size: 1.3em;
-  font-weight: bold;
-  padding-left: 2px;
-  padding-right: 2px;
-  background-color: #d3dfd3;
+    font-size: 1.3em;
+    font-weight: bold;
+    padding-left: 2px;
+    padding-right: 2px;
+    background-color: #d3dfd3;
 }
 .last-update {
- width: 200px;
+    width: 200px;
 }
 .milestone {
-  color: grey;
-  font-weight:bold;
-  width: 100px;
+    color: grey;
+    font-weight: bold;
+    width: 100px;
 }
 .label {
-  font-weight:bold;
-  width: 250px;
+    font-weight: bold;
+    width: 250px;
 }
 .labelname {
-  font-size: 0.7em;
-  box-shadow: 1px 1px 2px #333;
-  padding: 1px;
+    font-size: 0.7em;
+    box-shadow: 1px 1px 2px #333;
+    padding: 1px;
 }
 .labelname-dark {
-  color: #fff;
+    color: #fff;
 }
 .labelname-light {
-  color: #000;
+    color: #000;
 }
-.highlight{
-  font-weight:bold;
-  background-color:#f2ed00
+.highlight {
+    font-weight: bold;
+    background-color: #f2ed00
 }
-.title{
-  width: 400px;
+.title {
+    width: 400px;
 }
-.user{
-  width: 150px;
+.user {
+    width: 150px;
 }
 .nbrev {
-  color: red;
-  text-align: center;
-  width: 20px;
+    color: red;
+    text-align: center;
+    width: 20px;
 }
-.feedback_ok, .feedback_weak, .feedback_ko {
-  text-align: center;
-  width: 20px;
+.feedback_ok,
+.feedback_weak,
+.feedback_ko {
+    text-align: center;
+    width: 20px;
 }
 .feedback_ko {
-  color: red;
+    color: red;
 }
 .feedback_weak {
-  color: blue;
+    color: blue;
 }
 .feedback_ok {
-  color: green;
+    color: green;
 }
