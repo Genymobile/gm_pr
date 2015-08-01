@@ -18,6 +18,9 @@ th {
     padding-left: 2px;
     padding-right: 2px;
 }
+th.feedback-name {
+  font-weight: normal;
+}
 tr:nth-child(even) {
     background: #ffffff;
 }
