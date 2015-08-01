@@ -79,18 +79,16 @@ td a:hover {
   text-align: center;
   width: 20px;
 }
-.feedback_ko {
-  color: red;
+.feedback_ok, .feedback_weak, .feedback_ko {
   text-align: center;
   width: 20px;
+}
+.feedback_ko {
+  color: red;
 }
 .feedback_weak {
   color: blue;
-  text-align: center;
-  width: 20px;
 }
 .feedback_ok {
   color: green;
-  text-align: center;
-  width: 20px;
 }
