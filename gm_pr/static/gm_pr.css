@@ -1,5 +1,6 @@
 body {
   text-align: center;
+  font-family: sans-serif;
 }
 .project-box {
   box-shadow: 2px 2px 5px #333;
@@ -23,6 +24,9 @@ tr:nth-child(even) {
 tr:nth-child(odd) {
   background: #f0f0f0;
 }
+td{
+  padding: 0.2em;
+}
 td a:link, td a.active:link, td a:hover, td a:visited {
   color: #447e1d;
   text-decoration: none;
@@ -32,7 +36,6 @@ td a:hover {
 }
 .project-name {
   font-size: 1.3em;
-  font-family: sans-serif;
   font-weight: bold;
   padding-left: 2px;
   padding-right: 2px;
@@ -53,7 +56,6 @@ td a:hover {
 .labelname {
   font-size: 0.7em;
   box-shadow: 1px 1px 2px #333;
-  font-family: sans-serif;
   padding: 1px;
 }
 .labelname-dark {
