@@ -45,16 +45,16 @@ td a:hover {
     background-color: #d3dfd3;
 }
 .last-update {
-    width: 200px;
+    width: 12em;
 }
 .milestone {
     color: grey;
     font-weight: bold;
-    width: 100px;
+    width: 6em;
 }
 .label {
     font-weight: bold;
-    width: 250px;
+    width: 16em;
 }
 .labelname {
     font-size: 0.7em;
@@ -72,21 +72,21 @@ td a:hover {
     background-color: #f2ed00
 }
 .title {
-    width: 400px;
+    width: 25em;
 }
 .user {
-    width: 150px;
+    width: 9em;
 }
 .nbrev {
     color: red;
     text-align: center;
-    width: 20px;
+    width: 1.5em;
 }
 .feedback_ok,
 .feedback_weak,
 .feedback_ko {
     text-align: center;
-    width: 20px;
+    width: 1.5em;
 }
 .feedback_ko {
     color: red;
