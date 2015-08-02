@@ -14,9 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+html {
+    position: relative;
+    min-height: 100%;
+}
 body {
     text-align: center;
     font-family: sans-serif;
+    margin-bottom: 35px; /* bottom = footer height */
+    padding: 25px;
 }
 .project-box {
     box-shadow: 2px 2px 5px #333;
@@ -116,4 +122,16 @@ td a:hover {
 }
 .feedback_ok {
     color: green;
+}
+footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 35px;
+    width: 100%;
+    overflow:hidden;
+}
+footer img {
+    margin-left: 5px;
+    margin-right: 5px;
 }
