@@ -14,9 +14,9 @@
                 <th>Title</th>
                 <th>User</th>
                 <th>Reviews</th>
-                <th>{{feedback_ok}}</th>
-                <th>{{feedback_weak}}</th>
-                <th>{{feedback_ko}}</th>
+                <th class="feedback-name">{{feedback_ok|safe}}</th>
+                <th class="feedback-name">{{feedback_weak|safe}}</th>
+                <th class="feedback-name">{{feedback_ko|safe}}</th>
             </tr>
         {% for pr in project.pr_list %}
             <tr class="pr">
