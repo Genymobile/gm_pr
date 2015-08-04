@@ -19,7 +19,8 @@ th {
     padding-right: 2px;
 }
 th.feedback-name {
-  font-weight: normal;
+    font-weight: normal;
+    text-align: center;
 }
 tr:nth-child(even) {
     background: #ffffff;
