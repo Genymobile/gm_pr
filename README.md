@@ -5,7 +5,7 @@ If your project is spread over multiple git repositories, it can be hard to
 keep track of all the open pull requests.
 
 The gm_pr project gives you a simple web page where you can see all the open
-pull requests with the number of reviews, label, milestone, etc
+pull requests with the number of reviews, labels, milestones, etc
 
 ![screenshot](screenshot.png)
 
@@ -58,29 +58,29 @@ Normally you should only need to adjust a few settings:
 **ALLOWED_HOSTS** You may want to add the name of your server if you use
 the docker / apache configuration.
 
-**STATIC_URL** Add the full url to your static directory
+**STATIC_URL** Add the full URL to your static directory
 
 ### Gm_pr configuration
 
-Open **gm_pr/settings_projects.py** and read the comment, you'll need to change
-most of the configuration here, but the file is self documented.
+Open **gm_pr/settings_projects.py** and read the comments. You'll need to change
+most of the configuration here, but the file is self-documenting.
 
 ### Slack configuration
 
-You can see your PR from Slack.
+You can see your pull requests from Slack.
 
 You need to add a "slash command" in the slack settings:
 
  * Open https://mydomain.slack.com/services/new/slash-commands
  * Choose a command name, for eg: "/pr"
- * For the URL append "/bot/" to your gm_pr url
- * In order to make think easy with the Django CSRF protection you have to
+ * For the URL, append "/bot/" to your gm_pr URL.
+ * In order to make things easy with the Django CSRF protection, you have to
  choose the GET method.
  * Copy the token and add it in **settings_project.py**
  * click on "Save Integration"
 
-Now, go to the channel related to your project and type "/pr", after a
-few second the list of pull request should appears in your channel.
+Now, go to the channel related to your project and type "/pr". After a
+few seconds the list of pull requests should appear in your channel.
 
 ## Hacking
 
@@ -97,10 +97,10 @@ pip3 install django
 pip3 install django-celery
 ```
 
-On debian like system
+On Debian-like system
 
 ```
-apt-get install python3-django python3-django-celery celeryd python3-sqlalchemy
+sudo apt-get install python3-django python3-django-celery celeryd python3-sqlalchemy
 ```
 
 
@@ -124,4 +124,4 @@ version 2
 
 If you like this project, click on the star button on github  :-)
 
-Feel free to send us issue, and of course PR!!
+Feel free to send us issues, and of course PRs!!

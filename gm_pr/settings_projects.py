@@ -27,7 +27,7 @@ ORG = "Genymobile"
 TOP_LEVEL_URL = "https://api.github.com"
 
 ##
-# Slack configuration (ignore this section if do not use slack)
+# Slack configuration (ignore this section if you do not use slack)
 ##
 
 # link to the web version
@@ -54,7 +54,7 @@ FEEDBACK_OK = {"keyword": "LGTM", "name" : "LGTM"}
 FEEDBACK_WEAK = {"keyword" : ":hand:", "name" : "&#9995;"}
 FEEDBACK_KO = {"keyword": ":x:", "name" :"&#10007;"}
 
-# list of repo associated with each projects.
+# list of repos associated with each project.
 # Here "opensource" is the name of a project (you're free to choose the name you
 # want) and 'genymotion-binocle', 'FridgeCheckup' and 'gm_pr' are github's
 # repo name

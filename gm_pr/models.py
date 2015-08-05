@@ -14,7 +14,7 @@
 # limitations under the License.
 
 class Pr:
-    """ Stupid class wrapper for pr properties
+    """ Simple class wrapper for pr properties
     """
     def __init__(self, url="", title="", updated_at="", user="",
                  repo="", nbreview=0, feedback_ok=0, feedback_weak=0,
