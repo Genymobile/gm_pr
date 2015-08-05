@@ -69,12 +69,15 @@ most of the configuration here, but the file is self documented.
 
 You can see your PR from Slack.
 
-You need to add a "slash command" in the slack settings (for eg "/pr")
+You need to add a "slash command" in the slack settings:
 
-For the URL append "/bot/" to your gm_pr url, and in order to make think
-easy with the Django CSRF protection you have to choose the GET method.
-
-Of course, don't forget to add your slack token to **settings_project.py**
+ * Open https://mydomain.slack.com/services/new/slash-commands
+ * Choose a command name, for eg: "/pr"
+ * For the URL append "/bot/" to your gm_pr url
+ * In order to make think easy with the Django CSRF protection you have to
+ choose the GET method.
+ * Copy the token and add it in **settings_project.py**
+ * click on "Save Integration"
 
 Now, go to the channel related to your project and type "/pr", after a
 few second the list of pull request should appears in your channel.
