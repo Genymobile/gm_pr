@@ -76,8 +76,15 @@ You need to add a "slash command" in the slack settings:
  * For the URL, append "/bot/" to your gm_pr URL.
  * In order to make things easy with the Django CSRF protection, you have to
  choose the GET method.
- * Copy the token and add it in **settings_project.py**
+ * Copy the token and add it in **settings_project.py** (**SLACK_TOKEN**)
  * click on "Save Integration"
+
+Then you need to add a incoming-webhook to let the bot send messages to Slack:
+
+ * Open https://mydomain.slack.com/services/new/incoming-webhook
+ * Choose a channel (the bot will be able to override it, so the choice do
+ not matter)
+ * Copy the webhook URL in **setting_project.py** (**SLACK_URL**)
 
 Now, go to the channel related to your project and type "/pr". After a
 few seconds the list of pull requests should appear in your channel.

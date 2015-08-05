@@ -32,7 +32,9 @@ TOP_LEVEL_URL = "https://api.github.com"
 
 # link to the web version
 WEB_URL = "http://www.example.org/gm_pr/"
+# slack authentification token
 SLACK_TOKEN = "xxx"
+# incoming-webhook url
 SLACK_URL = "https://hooks.slack.com/services/xxxx"
 
 ##
