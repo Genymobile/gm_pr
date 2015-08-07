@@ -82,8 +82,8 @@ You need to add a "slash command" in the slack settings:
 Then you need to add a incoming-webhook to let the bot send messages to Slack:
 
  * Open https://mydomain.slack.com/services/new/incoming-webhook
- * Choose a channel (the bot will be able to override it, so the choice do
- not matter)
+ * Choose a channel (the bot will be able to override it, so it doesn't really
+ matter what you enter)
  * Copy the webhook URL in **setting_project.py** (**SLACK_URL**)
 
 Now, go to the channel related to your project and type "/pr". After a
