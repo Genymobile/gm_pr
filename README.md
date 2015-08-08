@@ -1,33 +1,100 @@
-Multi project Github PullRequest integration for Slack
-======================================================
-
-Slack setup:
-  * Add a "Incomming webhook" and copy the url in gm_pr.settings.SLACK_URL
-  the channel do not matter as it will be overrided in the script
-
-  * Add a "Slash command"
-    * use the GET method
-    * the url is where you deployed this django app followed by "/bot"
-    * copy the token in gm_pr.settings.SLACK_TOKEN
-
-Script setup
-  * Configure the slack channel / projects list mapping in gm_pr.settings.PROJECTS_CHAN
-
-  * Configure the github login / password
-
-  * WEB_URL is where you deployed this django app
-
-Docker cmd:
-  something like:
-
-    docker run --name=gm_pr -d -p 4280:8000 -v /var/www/gm_pr:/var/www/gm_pr gm_pr
+# gm_pr: A multi project Github pull request viewer
 
 
-Manual instructions:
-====================
+If your project is spread over multiple git repositories, it can be hard to
+keep track of all the open pull requests.
 
-Prerequisites (MacOS/homebrew):
--------------------------------
+The gm_pr project gives you a simple web page where you can see all the open
+pull requests with the number of reviews, labels, milestones, etc
+
+![screenshot](screenshot.png)
+
+As a bonus, we also have a slack bot :-)
+
+## Installation
+
+The recommended method to run gm_pr is to use the docker image.
+
+A Dockerfile is available in the "deploy" folder. Building and running the image
+can be done in a few lines:
+
+```
+cd deploy
+docker build -t gm_pr .
+docker run -v /path/to/gm_pr:/var/www/gm_pr --name gm_pr -p 8000:80 -d gm_pr
+```
+
+Now, you can simply point your browser to http://localhost:8000.
+
+If you want to make gm_pr available on your external interface, configure a
+reverse proxy with apache. You can use this snippet:
+
+```
+<Proxy http://localhost:8000/>
+        Order deny,allow
+        Allow from all
+</Proxy>
+
+ProxyPass /gm_pr http://localhost:8000
+ProxyPassReverse /gm_pr http://localhost:8000
+
+<Location /gm_pr/bot>
+        Require all granted
+</Location>
+```
+
+## Configuration
+
+2 files are used for configuration:
+
+ * gm_pr/settings.py: this is the standard Django configuration file
+ * gm_pr/settings_projects.py: contains everything related to your projects
+
+### Django configuration
+
+Refer to the django project if you want to change the configuration.
+Normally you should only need to adjust a few settings:
+
+**ALLOWED_HOSTS** You may want to add the name of your server if you use
+the docker / apache configuration.
+
+**STATIC_URL** Add the full URL to your static directory
+
+### Gm_pr configuration
+
+Open **gm_pr/settings_projects.py** and read the comments. You'll need to change
+most of the configuration here, but the file is self-documenting.
+
+### Slack configuration
+
+You can see your pull requests from Slack.
+
+You need to add a "slash command" in the slack settings:
+
+ * Open https://mydomain.slack.com/services/new/slash-commands
+ * Choose a command name, for eg: "/pr"
+ * For the URL, append "/bot/" to your gm_pr URL.
+ * In order to make things easy with the Django CSRF protection, you have to
+ choose the GET method.
+ * Copy the token and add it in **settings_project.py** (**SLACK_TOKEN**)
+ * click on "Save Integration"
+
+Then you need to add a incoming-webhook to let the bot send messages to Slack:
+
+ * Open https://mydomain.slack.com/services/new/incoming-webhook
+ * Choose a channel (the bot will be able to override it, so it doesn't really
+ matter what you enter)
+ * Copy the webhook URL in **setting_project.py** (**SLACK_URL**)
+
+Now, go to the channel related to your project and type "/pr". After a
+few seconds the list of pull requests should appear in your channel.
+
+## Hacking
+
+You need to install django for python3 and celery.
+
+Here is the command line for MacOS/homebrew
+
 ```
 brew doctor
 brew update
@@ -37,40 +104,31 @@ pip3 install django
 pip3 install django-celery
 ```
 
-Configuring the web page only:
-------------------------------
+On Debian-like system
 
-Edit gm_pr/settings.py.
-Set the following:
+```
+sudo apt-get install python3-django python3-django-celery celeryd python3-sqlalchemy
+```
 
-* GITHUB_LOGIN
-* GITHUB_PASSWORD
-* ORG
-* PROJECTS_CHAN
 
 Run the following commands to start the server:
 ```
 python3 manage.py migrate
-python3 manage.py runserver 192.168.1.4:8000
+python3 manage.py runserver
 ```
 
 Run the following command in a new terminal:
 ```
-celery -A gm_pr worker -l info --concurrency=20
+python3 manage.py celeryd
 ```
 
+Open the web page at http://localhost:8000
 
-Open the web page at http://192.168.1.4:8000
+# About gm_pr
 
-Running in production mode:
----------------------------
-To run in production mode, modify gm_pr/settings_production.py:
-* add at least one host to ALLOWED_HOSTS (https://docs.djangoproject.com/en/stable/ref/settings#allowed-hosts)
-* set STATIC_URL to a full url.  An external webserver must serve files at this url.
-  Example: http://example.com/static/
-* copy the contents of the gm_pr/static folder to the folder served at STATIC_URL.
-* Run the "runserver" and "celeryd" commands, with the production config:
-```
-python3 manage.py runserver 192.168.1.4:8000 --settings gm_pr.settings_production &
-python3 manage.py celeryd --setting=gm_pr.settings_production
-```
+Gm_pr is an open-source project distributed under the Apache license
+version 2
+
+If you like this project, click on the star button on github  :-)
+
+Feel free to send us issues, and of course PRs!!

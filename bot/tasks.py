@@ -1,16 +1,31 @@
+#
+# Copyright 2015 Genymobile
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from __future__ import absolute_import
 
 import json
 import urllib.request
-from gm_pr.PrFetcher import PrFetcher
+from gm_pr.prfetcher import PrFetcher
 from gm_pr.celery import app
 from gm_pr import settings
 
 @app.task
-def slack(url, org, weburl, project, slack, channel):
+def slack(url, org, weburl, repos, slackurl, channel):
     """ Celery task, use github api and send result to slack
     """
-    prf = PrFetcher(url, org, project)
+    prf = PrFetcher(url, org, repos)
     project_list = prf.get_prs()
     nb_proj = len(project_list)
     total_pr = 0
@@ -43,4 +58,4 @@ def slack(url, org, weburl, project, slack, channel):
                "text": txt,
                "icon_emoji": ":y:"}
 
-    urllib.request.urlopen(slack, json.dumps(payload).encode('utf-8'))
+    urllib.request.urlopen(slackurl, json.dumps(payload).encode('utf-8'))

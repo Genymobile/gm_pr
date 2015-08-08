@@ -1,16 +1,32 @@
-from django.http import HttpResponse
-from gm_pr import settings, chan_proj
-from bot import tasks, slackAuth
+#
+# Copyright 2015 Genymobile
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-@slackAuth.isFromSlack
+from django.http import HttpResponse
+from gm_pr import settings, proj_repo
+from bot import tasks, slackauth
+
+@slackauth.isFromSlack
 def index(request):
-    projects, channel_name = chan_proj.chan_proj(request)
-    if projects != None:
-        tasks.slack.delay(settings.TOP_LEVEL_URL, settings.ORG,
-                          "%s?project=%s" % (settings.WEB_URL, channel_name),
-                          projects,
+    project, repos = proj_repo.proj_repo(request)
+    if repos != None:
+        tasks.slack.delay(settings.TOP_LEVEL_URL,
+                          settings.ORG,
+                          "%s?project=%s" % (settings.WEB_URL, project),
+                          repos,
                           settings.SLACK_URL,
-                          "#%s" % channel_name)
+                          "#%s" % project)
         return HttpResponse("One moment, Octocat is considering your request\n")
     else:
         return HttpResponse("No projects found\n", status=404)

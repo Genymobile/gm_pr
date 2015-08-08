@@ -1,5 +1,19 @@
-import json, urllib.request
+#
+# Copyright 2015 Genymobile
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
+import json, urllib.request
 
 class PaginableJson:
     """ fetch json data with automatic pagination
@@ -14,6 +28,8 @@ class PaginableJson:
 
         response = urllib.request.urlopen(url)
         charset = response.info().get_content_charset()
+        if charset == None:
+            charset = 'utf-8'
 
         if 'Link' in response.info():
             #pagination
@@ -27,9 +43,6 @@ class PaginableJson:
         else:
             #no pagination
             self.__next_url = None
-
-        if charset == None:
-            charset = 'utf-8'
 
         self.__data = json.loads(response.read().decode(charset))
 
