@@ -26,6 +26,7 @@ limitations under the License.
         <table class="project">
             <tr>
                 <th>Last update</th>
+                <th>Last Activity</th>
                 <th>Milestone</th>
                 <th>Labels</th>
                 <th>Title</th>
@@ -45,6 +46,11 @@ limitations under the License.
                 {% else %}
                     <td class="last-update">{{pr.updated_at|naturaltime}}</td>
                 {% endif %}
+                <td class="user">
+                    {% if pr.last_activity %}
+                        {{pr.last_activity.user}} ({{pr.last_activity.event}})
+                    {% endif %}
+                </td>
                 <td class="milestone">{% if pr.milestone %}{{pr.milestone}}{% endif %}</td>
                 <td class="label">
                 {% for label in pr.labels %}
