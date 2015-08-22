@@ -26,6 +26,14 @@ ORG = "Genymobile"
 # do not change this :-)
 TOP_LEVEL_URL = "https://api.github.com"
 
+# Activities to include in the "Last Activity" column.
+# Possible values are:
+# "comments"
+# "events" (slows page loading)
+# "commits" (slows page loading)
+#LAST_ACTIVITY_FILTER = ("comments", "events", "commits") #slower but provides more information
+LAST_ACTIVITY_FILTER = ("comments")
+
 ##
 # Slack configuration (ignore this section if you do not use slack)
 ##
