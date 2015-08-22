@@ -126,8 +126,8 @@ def get_open_comment_count(url, user):
     open_comments=0
     review_comments = paginablejson.PaginableJson(url)
     for review_comment in review_comments:
-        # In obsolote comments, the commit_id != original_commit_id.
-        if review_comment['commit_id'] == review_comment['original_commit_id'] and review_comment['user']['login'] == user:
+        # In obsolote comments, the position is None
+        if review_comment['position'] is not None and review_comment['user']['login'] == user:
             open_comments +=1
     return open_comments
 
