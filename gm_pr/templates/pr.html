@@ -55,9 +55,9 @@ limitations under the License.
                 <td class="user">{{pr.user}}</td>
                 <td class="nbrev">{{pr.nbreview}}</td>
                 {% if request.GET.login %}
-                <td class="my-open-comments">
-                    {% if pr.my_open_comments > 0 %}
-                        {{pr.my_open_comments}}
+                <td class="my-open-comment-count">
+                    {% if pr.my_open_comment_count > 0 %}
+                        {{pr.my_open_comment_count}}
                     {% endif %}
                 </td>
                 {% endif %}
