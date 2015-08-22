@@ -48,7 +48,7 @@ def get_latest_commit(pr_url):
         return None
     last_commit_json = last_commit_json.get_last()
     return PrActivity(dateparse.parse_datetime(last_commit_json['commit']['committer']['date']),
-                             last_commit_json['committer']['login'],
+                             last_commit_json['commit']['committer']['name'],
                              "committed")
 
 # Return the PrActivity which is the most recent of the two given activities.
