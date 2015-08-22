@@ -19,15 +19,30 @@
 * an event (examples include assigning, locking, labeling, milestoning):
   https://developer.github.com/v3/issues/events/
 """
+import functools
 from gm_pr import models, paginablejson, settings
 from django.utils import dateparse
 
 
+@functools.total_ordering
 class PrActivity:
     def __init__(self, date=None, user="", event=""):
         self.date = date
         self.user = user
         self.event = event
+
+    def __eq__(self, other):
+        if other is None: return False
+        if self.date != other.date: return False
+        if self.user != other.user: return False
+        if self.event != other.event: return False
+        return True
+
+    def __lt__(self, other):
+        if other is None: return False
+        # Simplification: just compare the dates.
+        return self.date < other.date
+
 
 # Return a PrActivity for the latest event for the given issue.
 def get_latest_event(issue_url):
@@ -53,10 +68,8 @@ def get_latest_commit(pr_url):
 
 # Return the PrActivity which is the most recent of the two given activities.
 def get_latest_activity(activity1, activity2):
-    if activity1 is None and activity2 is None: return None
     if activity1 is None: return activity2
-    if activity2 is None: return activity1
-    if activity1.date > activity2.date: return activity1
+    if activity1 > activity2: return activity1
     return activity2
 
 
