@@ -20,14 +20,18 @@
   https://developer.github.com/v3/issues/events/
 """
 import functools
-from gm_pr import models, paginablejson, settings
+from gm_pr import paginablejson
 from django.utils import dateparse
+from datetime import datetime
 
 
 @functools.total_ordering
 class PrActivity:
-    def __init__(self, date_str="", user="", event=""):
-        self.date = dateparse.parse_datetime(date_str)
+    def __init__(self, date="", user="", event=""):
+        if isinstance(date, datetime):
+            self.date = date
+        else:
+            self.date = dateparse.parse_datetime(date)
         self.user = user
         self.event = event
 
