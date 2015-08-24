@@ -26,8 +26,8 @@ from django.utils import dateparse
 
 @functools.total_ordering
 class PrActivity:
-    def __init__(self, date=None, user="", event=""):
-        self.date = date
+    def __init__(self, date_str="", user="", event=""):
+        self.date = dateparse.parse_datetime(date_str)
         self.user = user
         self.event = event
 
@@ -51,7 +51,7 @@ def get_latest_event(issue_url):
     if len(last_event_json) == 0:
         return None
     last_event_json = last_event_json.get_last()
-    return PrActivity(dateparse.parse_datetime(last_event_json['created_at']),
+    return PrActivity(last_event_json['created_at'],
                              last_event_json['actor']['login'],
                              last_event_json['event'])
 
@@ -62,7 +62,7 @@ def get_latest_commit(pr_url):
     if len(last_commit_json) == 0:
         return None
     last_commit_json = last_commit_json.get_last()
-    return PrActivity(dateparse.parse_datetime(last_commit_json['commit']['committer']['date']),
+    return PrActivity(last_commit_json['commit']['committer']['date'],
                              last_commit_json['commit']['committer']['name'],
                              "committed")
 

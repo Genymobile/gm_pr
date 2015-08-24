@@ -96,7 +96,7 @@ def fetch_data(repo_name, url, org, current_user):
             for jcomment in conversation_json:
                 body = jcomment['body']
                 if "comments" in settings.LAST_ACTIVITY_FILTER:
-                    comment_activity = practivity.PrActivity(dateparse.parse_datetime(jcomment['updated_at']),
+                    comment_activity = practivity.PrActivity(jcomment['updated_at'],
                                                          jcomment['user']['login'],
                                                          "commented")
                     last_activity = practivity.get_latest_activity(last_activity, comment_activity)
