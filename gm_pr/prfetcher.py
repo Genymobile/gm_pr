@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gm_pr import models, paginablejson, settings
+from gm_pr import models, paginablejson, settings, practivity
 from celery import group
 from gm_pr.celery import app
 from operator import attrgetter
@@ -55,13 +55,19 @@ def fetch_data(repo_name, url, org, current_user):
     for json_pr in json_prlist:
         if json_pr['state'] == 'open':
             conversation_json = paginablejson.PaginableJson(json_pr['comments_url'])
+            issue_url = json_pr['issue_url']
+            last_event = None
+            last_commit = None
+            if "events" in settings.LAST_ACTIVITY_FILTER: last_event = practivity.get_latest_event(issue_url)
+            if "commits" in settings.LAST_ACTIVITY_FILTER: last_commit = practivity.get_latest_commit("%s/%s" %(url, json_pr['number']))
+            last_activity = practivity.get_latest_activity(last_event, last_commit)
+
             detail_json = paginablejson.PaginableJson(json_pr['url'])
             feedback_ok = 0
             feedback_weak = 0
             feedback_ko = 0
             milestone = json_pr['milestone']
-            label_json = paginablejson.PaginableJson("%s/labels" % \
-                                                     json_pr['issue_url'])
+            label_json = paginablejson.PaginableJson("%s/labels" % issue_url)
             labels = list()
             if label_json:
                 for lbl in label_json:
@@ -82,13 +88,18 @@ def fetch_data(repo_name, url, org, current_user):
                             is_old = True
                             break
 
-            # look for tags only in main conversation and not in "file changed"
             if current_user is not None:
                 my_open_comment_count = get_open_comment_count(json_pr['review_comments_url'], current_user)
             else:
                 my_open_comment_count = 0
+            # look for tags and activity only in main conversation and not in "file changed"
             for jcomment in conversation_json:
                 body = jcomment['body']
+                if "comments" in settings.LAST_ACTIVITY_FILTER:
+                    comment_activity = practivity.PrActivity(jcomment['updated_at'],
+                                                         jcomment['user']['login'],
+                                                         "commented")
+                    last_activity = practivity.get_latest_activity(last_activity, comment_activity)
                 if re.search(settings.FEEDBACK_OK['keyword'], body):
                     feedback_ok += 1
                 if re.search(settings.FEEDBACK_WEAK['keyword'], body):
@@ -103,6 +114,7 @@ def fetch_data(repo_name, url, org, current_user):
                            updated_at=date,
                            user=json_pr['user']['login'],
                            my_open_comment_count=my_open_comment_count,
+                           last_activity=last_activity,
                            repo=json_pr['base']['repo']['full_name'],
                            nbreview=int(detail_json['comments']) +
                                     int(detail_json['review_comments']),
