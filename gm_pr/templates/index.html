@@ -19,7 +19,26 @@ limitations under the License.
 
 {% block content %}
 
-{% for project in project_list %}
-<p><a href="?project={{project}}">{{project}}</a></p>
-{% endfor %}
+<div class="mdl-grid">
+    {% for project in project_list %}
+
+    <style>
+        .expand {
+        width:100%
+        }
+    </style>
+
+    <div class="mdl-cell mdl-cell--2-col">
+        <div class="mdl-card mdl-shadow--2dp expand">
+            <div class="mdl-card__title mdl-card--expand">
+                <h4>{{project}}</h4>
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+                   href="?project={{project}}">View</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}
