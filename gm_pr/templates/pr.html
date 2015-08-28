@@ -65,7 +65,7 @@ limitations under the License.
                 <td class="alignleft">{% if pr.milestone %}{{pr.milestone}}{% endif %}</td>
                 <td class="alignleft">
                     {% for label in pr.labels %}
-                        <span class="label" style="background-color:#{{label.color}}">{{label.name}}</span><br>
+                        <span class="label label-{{ label.style }}" style="background-color:#{{label.color}}">{{label.name}}</span><br>
                     {% endfor %}
                 </td>
                 <td class="title alignleft"><a href="{{pr.url}}">{{pr.title}}</a></td>

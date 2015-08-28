@@ -30,6 +30,12 @@ table {
     font-size :12px;
     text-transform: uppercase;
 }
+.label-dark {
+    color: white;
+}
+.label-light {
+    color: black;
+}
 .feedback_ok {
     color: green;
 }
