@@ -42,6 +42,9 @@ limitations under the License.
             <span class="mdl-layout-title">{{title}}</span>
             <!-- Add spacer, to align navigation to the right -->
             <div class="mdl-layout-spacer"></div>
+            <nav class="mdl-navigation">
+                {% block navigation %}{% endblock %}
+            </nav>
         </div>
     </header>
     <main class="mdl-layout__content">

@@ -17,13 +17,44 @@ limitations under the License.
 -->
 {% endcomment }
 {% load humanize %}
+
+
+{% block navigation %}
+        <a class="mdl-navigation__link" href="/">Back to project list</a>
+{% endblock %}
+
+
 {% block content %}
 
-{% for project in project_list %}
-<div class="project-box">
-    <div class="project">
-        <div class="project-name">{{project.name}}</div>
-        <table class="project">
+<style>
+    .container {
+        max-width: 1280px;
+    }
+    table {
+        width: 100%;
+    }
+    .label {
+        padding: 2px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size :12px;
+        text-transform: uppercase;
+    }
+    .feedback_ok {
+        color: green;
+    }
+    .feedback_ko {
+        color: red;
+    }
+</style>
+
+<div class="mdl-grid container">
+    {% for project in project_list %}
+
+    <section class="section--center mdl-cell mdl-cell--12-col">
+        <h4>{{project.name}}</h4>
+        <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+            <thead>
             <tr>
                 <th>Last update</th>
                 <th>Milestone</th>
@@ -31,34 +62,37 @@ limitations under the License.
                 <th>Title</th>
                 <th>User</th>
                 <th>Reviews</th>
-                <th class="feedback-name">{{feedback_ok|safe}}</th>
-                <th class="feedback-name">{{feedback_weak|safe}}</th>
-                <th class="feedback-name">{{feedback_ko|safe}}</th>
+                <th>{{feedback_ok|safe}}</th>
+                <th>{{feedback_weak|safe}}</th>
+                <th>{{feedback_ko|safe}}</th>
             </tr>
-        {% for pr in project.pr_list %}
+            </thead>
+
+            {% for pr in project.pr_list %}
             <tr class="pr">
                 {% if pr.is_old %}
-                    <td class="last-update highlight">{{pr.updated_at|naturaltime}}</td>
+                <td>{{pr.updated_at|naturaltime}}</td>
                 {% else %}
-                    <td class="last-update">{{pr.updated_at|naturaltime}}</td>
+                <td>{{pr.updated_at|naturaltime}}</td>
                 {% endif %}
-                <td class="milestone">{% if pr.milestone %}{{pr.milestone}}{% endif %}</td>
-                <td class="label">
-                {% for label in pr.labels %}
-                    <span class="labelname labelname-{{label.style}}" style="background-color:#{{label.color}}">{{label.name}}</span>
-                {% endfor %}
+                <td>{% if pr.milestone %}{{pr.milestone}}{% endif %}</td>
+                <td>
+                    {% for label in pr.labels %}
+                        <span class="label" style="background-color:#{{label.color}}">{{label.name}}</span>
+                    {% endfor %}
                 </td>
                 <td class="title"><a href="{{pr.url}}">{{pr.title}}</a></td>
                 <td class="user">{{pr.user}}</td>
                 <td class="nbrev">{{pr.nbreview}}</td>
                 <td class="feedback_ok">{{pr.feedback_ok}}</td>
-                <td class="feedback_weak">{{pr.feedback_weak}}</td>
+                <td>{{pr.feedback_weak}}</td>
                 <td class="feedback_ko">{{pr.feedback_ko}}</td>
             </tr>
-        {% endfor %}
+
+            {% endfor %}
+
         </table>
-    </div>
+    </section>
+    {% endfor %}
 </div>
-<p>
-{% endfor %}
 {% endblock %}
