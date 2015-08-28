@@ -27,9 +27,6 @@ limitations under the License.
 {% block content %}
 
 <style>
-    .container {
-        max-width: 1280px;
-    }
     table {
         width: 100%;
     }
@@ -54,7 +51,7 @@ limitations under the License.
     }
 </style>
 
-<div class="mdl-grid container">
+<div class="mdl-grid">
     {% for project in project_list %}
 
     <section class="section--center mdl-cell mdl-cell--12-col">
@@ -69,6 +66,9 @@ limitations under the License.
                 <th class="alignleft">Title</th>
                 <th class="alignleft">User</th>
                 <th class="aligncenter">Reviews</th>
+                {% if request.GET.login %}
+                <th>My Open Comments</th>
+                {% endif %}
                 <th class="aligncenter">{{feedback_ok|safe}}</th>
                 <th class="aligncenter">{{feedback_weak|safe}}</th>
                 <th class="aligncenter">{{feedback_ko|safe}}</th>
@@ -96,6 +96,13 @@ limitations under the License.
                 <td class="title alignleft"><a href="{{pr.url}}">{{pr.title}}</a></td>
                 <td class="user alignleft">{{pr.user}}</td>
                 <td class="nbrev aligncenter">{{pr.nbreview}}</td>
+                {% if request.GET.login %}
+                    <td>
+                        {% if pr.my_open_comment_count > 0 %}
+                            {{pr.my_open_comment_count}}
+                        {% endif %}
+                    </td>
+                {% endif %}
                 <td class="feedback_ok aligncenter">{{pr.feedback_ok}}</td>
                 <td>{{pr.feedback_weak}}</td>
                 <td class="feedback_ko aligncenter">{{pr.feedback_ko}}</td>
