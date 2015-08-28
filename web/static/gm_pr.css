@@ -1,0 +1,28 @@
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+table {
+    width: 100%;
+}
+.label {
+    padding: 2px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size :12px;
+    text-transform: uppercase;
+}
+.feedback_ok {
+    color: green;
+}
+.feedback_ko {
+    color: red;
+}
+td.alignleft, th.alignleft {
+    text-align: left;
+}
+td.aligncenter, th.aligncenter {
+    text-align: center;
+}
