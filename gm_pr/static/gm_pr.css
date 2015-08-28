@@ -108,6 +108,11 @@ td a:hover {
     text-align: center;
     width: 1.5em;
 }
+.my-open-comment-count{
+    color: black;
+    text-align: center;
+    width: 1.5em;
+}
 .feedback_ok,
 .feedback_weak,
 .feedback_ko {

@@ -31,6 +31,9 @@ limitations under the License.
                 <th>Title</th>
                 <th>User</th>
                 <th>Reviews</th>
+                {% if request.GET.login %}
+                <th>My Open Comments</th>
+                {% endif %}
                 <th class="feedback-name">{{feedback_ok|safe}}</th>
                 <th class="feedback-name">{{feedback_weak|safe}}</th>
                 <th class="feedback-name">{{feedback_ko|safe}}</th>
@@ -51,6 +54,13 @@ limitations under the License.
                 <td class="title"><a href="{{pr.url}}">{{pr.title}}</a></td>
                 <td class="user">{{pr.user}}</td>
                 <td class="nbrev">{{pr.nbreview}}</td>
+                {% if request.GET.login %}
+                <td class="my-open-comment-count">
+                    {% if pr.my_open_comment_count > 0 %}
+                        {{pr.my_open_comment_count}}
+                    {% endif %}
+                </td>
+                {% endif %}
                 <td class="feedback_ok">{{pr.feedback_ok}}</td>
                 <td class="feedback_weak">{{pr.feedback_weak}}</td>
                 <td class="feedback_ko">{{pr.feedback_ko}}</td>

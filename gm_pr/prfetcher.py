@@ -34,7 +34,7 @@ def is_color_light(rgb_hex_color_string):
     return y > 128
 
 @app.task
-def fetch_data(repo_name, url, org):
+def fetch_data(repo_name, url, org, current_user):
     """ Celery task, call github api
     repo_name -- github repo name
     url -- base url for this repo
@@ -83,6 +83,10 @@ def fetch_data(repo_name, url, org):
                             break
 
             # look for tags only in main conversation and not in "file changed"
+            if current_user is not None:
+                my_open_comment_count = get_open_comment_count(json_pr['review_comments_url'], current_user)
+            else:
+                my_open_comment_count = 0
             for jcomment in conversation_json:
                 body = jcomment['body']
                 if re.search(settings.FEEDBACK_OK['keyword'], body):
@@ -98,6 +102,7 @@ def fetch_data(repo_name, url, org):
                            title=json_pr['title'],
                            updated_at=date,
                            user=json_pr['user']['login'],
+                           my_open_comment_count=my_open_comment_count,
                            repo=json_pr['base']['repo']['full_name'],
                            nbreview=int(detail_json['comments']) +
                                     int(detail_json['review_comments']),
@@ -116,11 +121,21 @@ def fetch_data(repo_name, url, org):
 
     return repo
 
+# Return the number of non-obsolete review comments posted on the given PR url, by the given user.
+def get_open_comment_count(url, user):
+    open_comment_count=0
+    review_comments = paginablejson.PaginableJson(url)
+    for review_comment in review_comments:
+        # In obsolote comments, the position is None
+        if review_comment['position'] is not None and review_comment['user']['login'] == user:
+            open_comment_count +=1
+    return open_comment_count
+
 
 class PrFetcher:
     """ Pr fetc
     """
-    def __init__(self, url, org, repos):
+    def __init__(self, url, org, repos, current_user):
         """
         url -- top level url (eg: https://api.github.com)
         org -- github organisation (eg: Genymobile)
@@ -129,6 +144,7 @@ class PrFetcher:
         self.__url = url
         self.__org = org
         self.__repos = repos
+        self.__current_user = current_user
 
     def get_prs(self):
         """
@@ -137,7 +153,7 @@ class PrFetcher:
         return a list of { 'name' : repo_name, 'pr_list' : pr_list }
         pr_list is a list of models.Pr
         """
-        res = group(fetch_data.s(repo_name, self.__url, self.__org)
+        res = group(fetch_data.s(repo_name, self.__url, self.__org, self.__current_user)
                     for repo_name in self.__repos)()
         data = res.get()
         return [repo for repo in data if repo != None]
