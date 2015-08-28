@@ -57,6 +57,7 @@ limitations under the License.
             <thead>
             <tr>
                 <th>Last update</th>
+                <th>Last activity</th>
                 <th>Milestone</th>
                 <th>Labels</th>
                 <th>Title</th>
@@ -75,6 +76,11 @@ limitations under the License.
                 {% else %}
                 <td>{{pr.updated_at|naturaltime}}</td>
                 {% endif %}
+                <td>
+                    {% if pr.last_activity %}
+                        {{pr.last_activity.user}} ({{pr.last_activity.event}})
+                    {% endif %}
+                </td>
                 <td>{% if pr.milestone %}{{pr.milestone}}{% endif %}</td>
                 <td>
                     {% for label in pr.labels %}
