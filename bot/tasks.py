@@ -25,7 +25,7 @@ from gm_pr import settings
 def slack(url, org, weburl, repos, slackurl, channel):
     """ Celery task, use github api and send result to slack
     """
-    prf = PrFetcher(url, org, repos)
+    prf = PrFetcher(url, org, repos, None)
     project_list = prf.get_prs()
     nb_proj = len(project_list)
     total_pr = 0
