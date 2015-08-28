@@ -46,6 +46,12 @@ limitations under the License.
     .feedback_ko {
         color: red;
     }
+    td.alignleft, th.alignleft {
+        text-align: left;
+    }
+    td.aligncenter, th.aligncenter {
+        text-align: center;
+    }
 </style>
 
 <div class="mdl-grid container">
@@ -57,15 +63,15 @@ limitations under the License.
             <thead>
             <tr>
                 <th>Last update</th>
-                <th>Last activity</th>
-                <th>Milestone</th>
-                <th>Labels</th>
-                <th>Title</th>
-                <th>User</th>
-                <th>Reviews</th>
-                <th>{{feedback_ok|safe}}</th>
-                <th>{{feedback_weak|safe}}</th>
-                <th>{{feedback_ko|safe}}</th>
+                <th class="alignleft">Last activity</th>
+                <th class="alignleft">Milestone</th>
+                <th class="alignleft">Labels</th>
+                <th class="alignleft">Title</th>
+                <th class="alignleft">User</th>
+                <th class="aligncenter">Reviews</th>
+                <th class="aligncenter">{{feedback_ok|safe}}</th>
+                <th class="aligncenter">{{feedback_weak|safe}}</th>
+                <th class="aligncenter">{{feedback_ko|safe}}</th>
             </tr>
             </thead>
 
@@ -76,23 +82,23 @@ limitations under the License.
                 {% else %}
                 <td>{{pr.updated_at|naturaltime}}</td>
                 {% endif %}
-                <td>
+                <td class="alignleft">
                     {% if pr.last_activity %}
                         {{pr.last_activity.user}} ({{pr.last_activity.event}})
                     {% endif %}
                 </td>
-                <td>{% if pr.milestone %}{{pr.milestone}}{% endif %}</td>
-                <td>
+                <td class="alignleft">{% if pr.milestone %}{{pr.milestone}}{% endif %}</td>
+                <td class="alignleft">
                     {% for label in pr.labels %}
                         <span class="label" style="background-color:#{{label.color}}">{{label.name}}</span>
                     {% endfor %}
                 </td>
-                <td class="title"><a href="{{pr.url}}">{{pr.title}}</a></td>
-                <td class="user">{{pr.user}}</td>
-                <td class="nbrev">{{pr.nbreview}}</td>
-                <td class="feedback_ok">{{pr.feedback_ok}}</td>
+                <td class="title alignleft"><a href="{{pr.url}}">{{pr.title}}</a></td>
+                <td class="user alignleft">{{pr.user}}</td>
+                <td class="nbrev aligncenter">{{pr.nbreview}}</td>
+                <td class="feedback_ok aligncenter">{{pr.feedback_ok}}</td>
                 <td>{{pr.feedback_weak}}</td>
-                <td class="feedback_ko">{{pr.feedback_ko}}</td>
+                <td class="feedback_ko aligncenter">{{pr.feedback_ko}}</td>
             </tr>
 
             {% endfor %}
