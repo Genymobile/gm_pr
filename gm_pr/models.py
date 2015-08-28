@@ -17,7 +17,6 @@ class Pr:
     """ Simple class wrapper for pr properties
     """
     def __init__(self, url="", title="", updated_at="", user="", my_open_comment_count=0, last_activity=None,
-    def __init__(self, url="", title="", updated_at="", user="", last_activity=None,
                  repo="", nbreview=0, feedback_ok=0, feedback_weak=0,
                  feedback_ko=0, milestone=None, labels=None,
                  is_old=False):
