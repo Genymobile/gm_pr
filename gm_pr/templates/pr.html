@@ -84,13 +84,13 @@ limitations under the License.
                 {% endif %}
                 <td class="alignleft">
                     {% if pr.last_activity %}
-                        {{pr.last_activity.user}} ({{pr.last_activity.event}})
+                        {{pr.last_activity.user}}<br>({{pr.last_activity.event}})
                     {% endif %}
                 </td>
                 <td class="alignleft">{% if pr.milestone %}{{pr.milestone}}{% endif %}</td>
                 <td class="alignleft">
                     {% for label in pr.labels %}
-                        <span class="label" style="background-color:#{{label.color}}">{{label.name}}</span>
+                        <span class="label" style="background-color:#{{label.color}}">{{label.name}}</span><br>
                     {% endfor %}
                 </td>
                 <td class="title alignleft"><a href="{{pr.url}}">{{pr.title}}</a></td>
