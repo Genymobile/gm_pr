@@ -20,15 +20,12 @@ RUN apt-get install -y \
     python3-django-celery \
     celeryd \
     python3-sqlalchemy \
-    rabbitmq \
+    rabbitmq-server \
     supervisor \
     apache2 \
     libapache2-mod-wsgi-py3
 ADD gm_pr.conf /etc/apache2/sites-available/gm_pr.conf
 RUN a2ensite gm_pr
-RUN rabbitmqctl add_user gm_pr gm_pr
-RUN rabbitmqctl add_vhost gm_pr
-RUN rabbitmqctl set_permissions -p gm_pr gm_pr ".*" ".*" ".*"
 
 EXPOSE 80
 WORKDIR /var/www/gm_pr

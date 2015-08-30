@@ -107,7 +107,7 @@ pip3 install django-celery
 On Debian-like system
 
 ```
-sudo apt-get install python3-django python3-django-celery celeryd python3-sqlalchemy rabbitmq
+sudo apt-get install python3-django python3-django-celery celeryd python3-sqlalchemy rabbitmq-server
 ```
 
 Create a user and vhost for rabbitmq
