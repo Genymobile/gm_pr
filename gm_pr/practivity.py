@@ -20,7 +20,6 @@
   https://developer.github.com/v3/issues/events/
 """
 import functools
-from gm_pr import paginablejson
 from django.utils import dateparse
 from datetime import datetime
 
@@ -49,9 +48,8 @@ class PrActivity:
 
 
 # Return a PrActivity for the latest event for the given issue.
-def get_latest_event(issue_url):
+def get_latest_event(last_event_json):
     event_url = "%s/events?per_page=1" % (issue_url)
-    last_event_json = paginablejson.PaginableJson(event_url)
     if len(last_event_json) == 0:
         return None
     last_event_json = last_event_json.get_last()
@@ -60,9 +58,8 @@ def get_latest_event(issue_url):
                              last_event_json['event'])
 
 # Return a PrActivity for the latest commit for the given PR.
-def get_latest_commit(pr_url):
+def get_latest_commit(last_commit_json):
     commit_url = "%s/commits?per_page=1" % (pr_url)
-    last_commit_json = paginablejson.PaginableJson(commit_url)
     if len(last_commit_json) == 0:
         return None
     last_commit_json = last_commit_json.get_last()

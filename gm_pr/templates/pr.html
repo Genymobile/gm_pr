@@ -27,10 +27,10 @@ limitations under the License.
 {% block content %}
 
 <div class="mdl-grid">
-    {% for project in project_list %}
+    {% for name, prlist in projects.items %}
 
     <section class="section--center mdl-cell mdl-cell--12-col">
-        <h4>{{project.name}}</h4>
+        <h4>{{name}}</h4>
         <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
             <thead>
             <tr>
@@ -50,7 +50,7 @@ limitations under the License.
             </tr>
             </thead>
 
-            {% for pr in project.pr_list %}
+            {% for pr in prlist %}
             <tr class="pr">
                 {% if pr.is_old %}
                 <td>{{pr.updated_at|naturaltime}}</td>
