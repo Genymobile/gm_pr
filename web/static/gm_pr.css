@@ -48,3 +48,7 @@ td.alignleft, th.alignleft {
 td.aligncenter, th.aligncenter {
     text-align: center;
 }
+.highlight {
+    font-weight: bold;
+    background-color: #f2ed00
+}

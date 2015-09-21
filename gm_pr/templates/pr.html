@@ -53,7 +53,7 @@ limitations under the License.
             {% for pr in project.pr_list %}
             <tr class="pr">
                 {% if pr.is_old %}
-                <td>{{pr.updated_at|naturaltime}}</td>
+                <td class="highlight">{{pr.updated_at|naturaltime}}</td>
                 {% else %}
                 <td>{{pr.updated_at|naturaltime}}</td>
                 {% endif %}
