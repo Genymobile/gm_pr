@@ -160,12 +160,12 @@ def get_urls_for_repo(repo_name, url, org, current_user):
                 tagurls.append({ 'repo' : repo_name,
                                  'tag' : 'events',
                                  'prid' : json_pr['id'],
-                                 'url' : json_pr['issue_url'] })
+                                 'url' : "%s/events" % json_pr['issue_url'] })
             if "commits" in settings.LAST_ACTIVITY_FILTER:
                 tagurls.append({ 'repo' : repo_name,
                                  'tag' : 'commits',
                                  'prid' : json_pr['id'],
-                                 'url' : "%s/%s" %(url, json_pr['number']) })
+                                 'url' : json_pr['commits_url'] })
     return tagurls
 
 @app.task

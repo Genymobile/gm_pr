@@ -49,7 +49,6 @@ class PrActivity:
 
 # Return a PrActivity for the latest event for the given issue.
 def get_latest_event(last_event_json):
-    event_url = "%s/events?per_page=1" % (issue_url)
     if len(last_event_json) == 0:
         return None
     last_event_json = last_event_json.get_last()
@@ -59,7 +58,6 @@ def get_latest_event(last_event_json):
 
 # Return a PrActivity for the latest commit for the given PR.
 def get_latest_commit(last_commit_json):
-    commit_url = "%s/commits?per_page=1" % (pr_url)
     if len(last_commit_json) == 0:
         return None
     last_commit_json = last_commit_json.get_last()
