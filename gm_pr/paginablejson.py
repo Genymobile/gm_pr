@@ -49,6 +49,8 @@ class PaginableJson:
     def __retrieve_data(self):
         data = self.__data
         idx = self.__idx
+        if not isinstance(data, list):
+            return data
         if self.__idx >= len(self.__data) - 1:
             self.__data = None
         self.__idx += 1
