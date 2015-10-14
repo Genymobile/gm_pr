@@ -133,11 +133,11 @@ TEMPLATE_DIRS = (
     os.path.join( os.path.abspath(os.path.dirname(__file__)), 'templates/'),
 )
 
-CELERY_ACCEPT_CONTENT = ['json', 'yaml']
+CELERY_ACCEPT_CONTENT = ['json', 'yaml', 'pickle']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_IMPORTS = ("bot.tasks", "gm_pr.prfetcher")
-BROKER_URL = 'sqla+sqlite:///celerydb.sqlite'
-
+BROKER_URL = 'amqp://gm_pr:gm_pr@localhost:5672/gm_pr'
+CELERY_RESULT_BACKEND = 'amqp'
 
 INSTALLED_APPS = (
     'django.contrib.auth',

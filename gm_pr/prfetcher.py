@@ -14,7 +14,7 @@
 # limitations under the License.
 
 from gm_pr import models, paginablejson, settings, practivity
-from celery import group
+from celery import group, subtask
 from gm_pr.celery import app
 from operator import attrgetter
 from django.utils import dateparse
@@ -33,110 +33,168 @@ def is_color_light(rgb_hex_color_string):
 
     return y > 128
 
-@app.task
-def fetch_data(repo_name, url, org, current_user):
-    """ Celery task, call github api
-    repo_name -- github repo name
-    url -- base url for this repo
-    org -- github organisation
-
-    return a dict {'name' : repo_name, 'pr_list' : pr_list} with pr_list a list
-    of models.Pr
+def parse_githubdata(data, current_user):
     """
-    pr_list = []
-    repo = {'name' : repo_name,
-            'pr_list' : pr_list,
-           }
+    data { 'repo': genymotion-libauth,
+           detail: paginable,
+           label: paginable,
+           comment: paginable,
+           json: json,
+           review_comments: paginable, (optional)
+           events: paginable, (optional)
+           commits: paginable, (optional)
+         }
+    return models.Pr
+    """
+
+    now = timezone.now()
+    feedback_ok = 0
+    feedback_weak = 0
+    feedback_ko = 0
+    milestone = data['json']['milestone']
+    labels = list()
+    last_event = None
+    last_commit = None
+
+    if 'events' in data: last_event = practivity.get_latest_event(data['events'])
+    if 'commits' in data: last_commit = practivity.get_latest_commit(data['commits'])
+    last_activity = practivity.get_latest_activity(last_event, last_commit)
+
+    for lbl in data['label']:
+        label_style = 'light' if is_color_light(lbl['color']) else 'dark'
+        labels.append({'name' : lbl['name'],
+                       'color' : lbl['color'],
+                       'style' : label_style,
+        })
+
+    date = dateparse.parse_datetime(data['json']['updated_at'])
+    is_old = False
+    if (now - date).days >= settings.OLD_PERIOD:
+        if not labels and None in settings.OLD_LABELS:
+            is_old = True
+        else:
+            for lbl in labels:
+                if lbl['name'] in settings.OLD_LABELS:
+                    is_old = True
+                    break
+
+    if current_user is not None:
+        my_open_comment_count = get_open_comment_count(data['review_comments'], current_user)
+    else:
+        my_open_comment_count = 0
+
+    # look for tags and activity only in main conversation and not in "file changed"
+    for jcomment in data['comment']:
+        body = jcomment['body']
+        if "comments" in settings.LAST_ACTIVITY_FILTER:
+            comment_activity = practivity.PrActivity(jcomment['updated_at'],
+                                                     jcomment['user']['login'],
+                                                     "commented")
+            last_activity = practivity.get_latest_activity(last_activity, comment_activity)
+        if re.search(settings.FEEDBACK_OK['keyword'], body):
+            feedback_ok += 1
+        if re.search(settings.FEEDBACK_WEAK['keyword'], body):
+            feedback_weak += 1
+        if re.search(settings.FEEDBACK_KO['keyword'], body):
+            feedback_ko += 1
+    if milestone:
+        milestone = milestone['title']
+
+    pr = models.Pr(url=data['json']['html_url'],
+                   title=data['json']['title'],
+                   updated_at=date,
+                   user=data['json']['user']['login'],
+                   my_open_comment_count=my_open_comment_count,
+                   last_activity=last_activity,
+                   repo=data['json']['base']['repo']['name'],
+                   nbreview=int(data['detail']['comments']) +
+                            int(data['detail']['review_comments']),
+                   feedback_ok=feedback_ok,
+                   feedback_weak=feedback_weak,
+                   feedback_ko=feedback_ko,
+                   milestone=milestone,
+                   labels=labels,
+                   is_old=is_old)
+
+    return pr
+
+@app.task
+def get_urls_for_repo(repo_name, url, org, current_user):
+    """ get all "suburl" (comments, labels, detail, ...) from the "pulls" url
+    for a repo.
+    return a list of "tagurl" hash. Each tagurl element represent an url with
+    meta data (type, repoid)
+    """
     url = "%s/repos/%s/%s/pulls" % (url, org, repo_name)
     json_prlist = paginablejson.PaginableJson(url)
-    now = timezone.now()
+    tagurls = []
     if not json_prlist:
-        return
+        return tagurls
     for json_pr in json_prlist:
         if json_pr['state'] == 'open':
-            conversation_json = paginablejson.PaginableJson(json_pr['comments_url'])
-            issue_url = json_pr['issue_url']
-            last_event = None
-            last_commit = None
-            if "events" in settings.LAST_ACTIVITY_FILTER: last_event = practivity.get_latest_event(issue_url)
-            if "commits" in settings.LAST_ACTIVITY_FILTER: last_commit = practivity.get_latest_commit("%s/%s" %(url, json_pr['number']))
-            last_activity = practivity.get_latest_activity(last_event, last_commit)
+            tagurls.append({ 'repo' : repo_name,
+                             'tag' : 'json',
+                             'prid' : json_pr['id'],
+                             # XXX: this is not a url. We pass the json to have
+                             # it in the final data response.
+                             # see get_tagdata_from_tagurl
+                             'url' : json_pr })
+            tagurls.append({ 'repo' : repo_name,
+                             'tag' : 'comment',
+                             'prid' : json_pr['id'],
+                             'url' : json_pr['comments_url'] })
+            tagurls.append({ 'repo' : repo_name,
+                             'tag' : 'detail',
+                             'prid' : json_pr['id'],
+                             'url' : json_pr['url'] })
+            tagurls.append({ 'repo' : repo_name,
+                             'tag' : 'label',
+                             'prid' : json_pr['id'],
+                             'url' : "%s/labels" % json_pr['issue_url'] })
+            if current_user:
+                tagurls.append({ 'repo' : repo_name,
+                                 'tag' : 'review_comments',
+                                 'prid' : json_pr['id'],
+                                 'url' : json_pr['review_comments_url'] })
+            if "events" in settings.LAST_ACTIVITY_FILTER:
+                tagurls.append({ 'repo' : repo_name,
+                                 'tag' : 'events',
+                                 'prid' : json_pr['id'],
+                                 'url' : "%s/events" % json_pr['issue_url'] })
+            if "commits" in settings.LAST_ACTIVITY_FILTER:
+                tagurls.append({ 'repo' : repo_name,
+                                 'tag' : 'commits',
+                                 'prid' : json_pr['id'],
+                                 'url' : json_pr['commits_url'] })
+    return tagurls
 
-            detail_json = paginablejson.PaginableJson(json_pr['url'])
-            feedback_ok = 0
-            feedback_weak = 0
-            feedback_ko = 0
-            milestone = json_pr['milestone']
-            label_json = paginablejson.PaginableJson("%s/labels" % issue_url)
-            labels = list()
-            if label_json:
-                for lbl in label_json:
-                    label_style = 'light' if is_color_light(lbl['color']) else 'dark'
-                    labels.append({'name' : lbl['name'],
-                                   'color' : lbl['color'],
-                                   'style' : label_style,
-                                  })
+@app.task
+def dmap(it, callback):
+    # http://stackoverflow.com/questions/13271056/how-to-chain-a-celery-task-that-returns-a-list-into-a-group
+    # Map a callback over an iterator and return as a group
+    callback = subtask(callback)
+    return group(callback.clone((arg,)) for arg in it)()
 
-            date = dateparse.parse_datetime(json_pr['updated_at'])
-            is_old = False
-            if (now - date).days >= settings.OLD_PERIOD:
-                if not labels and None in settings.OLD_LABELS:
-                    is_old = True
-                else:
-                    for lbl in labels:
-                        if lbl['name'] in settings.OLD_LABELS:
-                            is_old = True
-                            break
 
-            if current_user is not None:
-                my_open_comment_count = get_open_comment_count(json_pr['review_comments_url'], current_user)
-            else:
-                my_open_comment_count = 0
-            # look for tags and activity only in main conversation and not in "file changed"
-            for jcomment in conversation_json:
-                body = jcomment['body']
-                if "comments" in settings.LAST_ACTIVITY_FILTER:
-                    comment_activity = practivity.PrActivity(jcomment['updated_at'],
-                                                         jcomment['user']['login'],
-                                                         "commented")
-                    last_activity = practivity.get_latest_activity(last_activity, comment_activity)
-                if re.search(settings.FEEDBACK_OK['keyword'], body):
-                    feedback_ok += 1
-                if re.search(settings.FEEDBACK_WEAK['keyword'], body):
-                    feedback_weak += 1
-                if re.search(settings.FEEDBACK_KO['keyword'], body):
-                    feedback_ko += 1
-            if milestone:
-                milestone = milestone['title']
+@app.task
+def get_tagdata_from_tagurl(tagurl):
+    """ Transform a tagurl to a tagdata: do the HTTP request
+    """
+    if tagurl['tag'] == 'json':
+        return { 'repo' : tagurl['repo'],
+                 'tag' : tagurl['tag'],
+                 'prid' : tagurl['prid'],
+                 'json' : tagurl['url']}
+    else:
+        return { 'repo' : tagurl['repo'],
+                 'tag' : tagurl['tag'],
+                 'prid' : tagurl['prid'],
+                 'json' : paginablejson.PaginableJson(tagurl['url'])}
 
-            pr = models.Pr(url=json_pr['html_url'],
-                           title=json_pr['title'],
-                           updated_at=date,
-                           user=json_pr['user']['login'],
-                           my_open_comment_count=my_open_comment_count,
-                           last_activity=last_activity,
-                           repo=json_pr['base']['repo']['full_name'],
-                           nbreview=int(detail_json['comments']) +
-                                    int(detail_json['review_comments']),
-                           feedback_ok=feedback_ok,
-                           feedback_weak=feedback_weak,
-                           feedback_ko=feedback_ko,
-                           milestone=milestone,
-                           labels=labels,
-                           is_old=is_old)
-            pr_list.append(pr)
-
-    repo['pr_list'] = sorted(pr_list, key=attrgetter('updated_at'), reverse=True)
-
-    if not pr_list:
-        return None
-
-    return repo
 
 # Return the number of non-obsolete review comments posted on the given PR url, by the given user.
-def get_open_comment_count(url, user):
+def get_open_comment_count(review_comments, user):
     open_comment_count=0
-    review_comments = paginablejson.PaginableJson(url)
     for review_comment in review_comments:
         # In obsolote comments, the position is None
         if review_comment['position'] is not None and review_comment['user']['login'] == user:
@@ -145,7 +203,7 @@ def get_open_comment_count(url, user):
 
 
 class PrFetcher:
-    """ Pr fetc
+    """ Pr fetcher
     """
     def __init__(self, url, org, repos, current_user):
         """
@@ -165,7 +223,41 @@ class PrFetcher:
         return a list of { 'name' : repo_name, 'pr_list' : pr_list }
         pr_list is a list of models.Pr
         """
-        res = group(fetch_data.s(repo_name, self.__url, self.__org, self.__current_user)
+        # { 41343736 : { 'repo': genymotion-libauth,
+        #                detail: paginable,
+        #                label: paginable,
+        #                comment: paginable } }
+        github_data = {}
+        # Parallelisation strategy: get_urls_for_repo will extract every urls
+        # needed for every open PR on a repo. Those urls are stored in a hash
+        # with metadata to identify where do they come from (tagurl).
+        # Each tagurl is distributed to a celery worker to do the HTTP request
+        # and retrieve the data (tagdata). The data is a PaginableJson.
+        # Then we merge all the tagdata from the same PR (same prid) and parse
+        # the result. The merge and parsing is done by django
+        # FIXME: In the parsing function (parse_githubdata), we iterate
+        # on a PaginableJson. This can result in a http request (if there
+        # is more than one page). In this case the request will be done in the
+        # django process (not the celery worker) and will not be parallelised
+        res = group((get_urls_for_repo.s(repo_name, self.__url, self.__org,
+                                         self.__current_user) | \
+                     dmap.s(get_tagdata_from_tagurl.s()))
                     for repo_name in self.__repos)()
         data = res.get()
-        return [repo for repo in data if repo != None]
+        for groupres in res.get():
+            for tagdata in groupres.get():
+                prid = tagdata['prid']
+                if prid not in github_data:
+                    github_data[prid] = {}
+                    github_data[prid]['repo'] = tagdata['repo']
+                github_data[prid][tagdata['tag']] = tagdata['json']
+
+        prlist = [ parse_githubdata(github_data[prid], self.__current_user)
+                   for prid in github_data ]
+        repo_pr = {}
+        for pr in prlist:
+            if pr.repo not in repo_pr:
+                repo_pr[pr.repo] = []
+            repo_pr[pr.repo].append(pr)
+
+        return repo_pr
