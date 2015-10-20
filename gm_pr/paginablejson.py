@@ -59,7 +59,7 @@ class PaginableJson:
     def get_last(self):
         if self.__last_url is not None:
             self.__fetch_data(self.__last_url)
-        return self.__retrieve_data()
+        return self.__data[-1]
 
     def __init__(self, url):
         self.__url = url
