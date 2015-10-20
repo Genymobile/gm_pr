@@ -25,7 +25,7 @@ import time
 def index(request):
     if not request.GET:
         context = {'title': "Project list",
-                   'project_list' : settings.PROJECTS_REPOS.keys()}
+                   'project_list' : sorted(settings.PROJECTS_REPOS.keys())}
         return render(request, 'index.html', context)
 
     project, repos = proj_repo.proj_repo(request)
