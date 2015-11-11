@@ -13,7 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json, urllib.request
+import json, urllib.request, urllib.error
+import logging
+
+logger = logging.getLogger('gm_pr')
 
 class PaginableJson:
     """ fetch json data with automatic pagination
@@ -26,7 +29,13 @@ class PaginableJson:
         if self.__last_url == url:
             self.__end = True
 
-        response = urllib.request.urlopen(url)
+        try:
+            response = urllib.request.urlopen(url)
+        except urllib.error.URLError as e:
+            logger.warning("cannot open %s: %s", url, e.reason)
+            self.__data = {}
+            return
+
         charset = response.info().get_content_charset()
         if charset == None:
             charset = 'utf-8'
