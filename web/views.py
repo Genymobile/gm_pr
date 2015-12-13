@@ -19,13 +19,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from gm_pr import settings, proj_repo
+from gm_pr.models import Project, Repo
 from gm_pr.prfetcher import PrFetcher
 import time
 
 def index(request):
     if not request.GET:
         context = {'title': "Project list",
-                   'project_list' : sorted(settings.PROJECTS_REPOS.keys())}
+                   'project_list' : Project.objects.order_by('name').all()}
         return render(request, 'index.html', context)
 
     project, repos = proj_repo.proj_repo(request)

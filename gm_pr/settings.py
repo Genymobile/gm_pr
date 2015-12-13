@@ -55,6 +55,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'djcelery',
+    'import_export',
+    'gm_pr',
     'web',
     'bot',
 )

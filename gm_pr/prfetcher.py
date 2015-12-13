@@ -261,10 +261,10 @@ class PrFetcher:
         # on a PaginableJson. This can result in a http request (if there
         # is more than one page). In this case the request will be done in the
         # django process (not the celery worker) and will not be parallelised
-        res = group((get_urls_for_repo.s(repo_name, self.__url, self.__org,
+        res = group((get_urls_for_repo.s(repo.name, self.__url, self.__org,
                                          self.__current_user) | \
                      dmap.s(get_tagdata_from_tagurl.s()))
-                    for repo_name in self.__repos)()
+                    for repo in self.__repos)()
         data = res.get()
         for groupres in res.get():
             for tagdata in groupres.get():
