@@ -16,14 +16,14 @@
 FROM debian:jessie
 RUN apt-get update
 RUN apt-get install -y \
-    python3-django \
-    python3-django-celery \
     celeryd \
-    python3-sqlalchemy \
     rabbitmq-server \
     supervisor \
     apache2 \
-    libapache2-mod-wsgi-py3
+    libapache2-mod-wsgi-py3 \
+    python3-pip
+ADD commons.txt /tmp/commons.txt
+RUN pip3 install -r /tmp/commons.txt
 ADD gm_pr.conf /etc/apache2/sites-available/gm_pr.conf
 RUN a2ensite gm_pr
 
