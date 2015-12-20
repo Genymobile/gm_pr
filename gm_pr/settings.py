@@ -154,6 +154,7 @@ LOGGING = {
     'loggers': {
         'gm_pr': {
             'handlers': ['file', 'console'],
+            'level': 'DEBUG',
         },
     },
 }
