@@ -22,6 +22,10 @@ from gm_pr import settings, proj_repo
 from gm_pr.models import Project, Repo
 from gm_pr.prfetcher import PrFetcher
 import time
+import logging
+
+logger = logging.getLogger('gm_pr')
+
 
 def index(request):
     if not request.GET:
@@ -46,7 +50,7 @@ def index(request):
                    "feedback_ko" : settings.FEEDBACK_KO['name']}
 
         after = time.time()
-        print(after - before)
+        logger.debug("page generated in %s sec" % (after - before))
         return render(request, 'pr.html', context)
     else:
         return HttpResponse("No projects found\n", status=404)
