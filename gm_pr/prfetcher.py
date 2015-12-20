@@ -21,9 +21,12 @@ from django.utils import dateparse
 from django.utils import timezone
 
 import re
+import logging
 
-class Pr:
-    """ Simple class wrapper for pr properties
+logger = logging.getLogger('gm_pr')
+
+class PullRequest:
+    """ Simple class wrapper for PullRequest properties
     """
     def __init__(self, url="", title="", updated_at="", user="", my_open_comment_count=0, last_activity=None,
                  repo="", nbreview=0, feedback_ok=0, feedback_weak=0,
@@ -122,21 +125,24 @@ def parse_githubdata(data, current_user):
     if milestone:
         milestone = milestone['title']
 
-    pr = Pr(url=data['json']['html_url'],
-                   title=data['json']['title'],
-                   updated_at=date,
-                   user=data['json']['user']['login'],
-                   my_open_comment_count=my_open_comment_count,
-                   last_activity=last_activity,
-                   repo=data['json']['base']['repo']['name'],
-                   nbreview=int(data['detail']['comments']) +
-                            int(data['detail']['review_comments']),
-                   feedback_ok=feedback_ok,
-                   feedback_weak=feedback_weak,
-                   feedback_ko=feedback_ko,
-                   milestone=milestone,
-                   labels=labels,
-                   is_old=is_old)
+    try:
+        pr = PullRequest(url=data['json']['html_url'],
+                         title=data['json']['title'],
+                         updated_at=date,
+                         user=data['json']['user']['login'],
+                         my_open_comment_count=my_open_comment_count,
+                         last_activity=last_activity,
+                         repo=data['json']['base']['repo']['name'],
+                         nbreview=int(data['detail']['comments']) +
+                                  int(data['detail']['review_comments']),
+                         feedback_ok=feedback_ok,
+                         feedback_weak=feedback_weak,
+                         feedback_ko=feedback_ko,
+                         milestone=milestone,
+                         labels=labels,
+                         is_old=is_old)
+    except Exception as e:
+        logger.error("cannot create PullRequest: %s", e)
 
     return pr
 
