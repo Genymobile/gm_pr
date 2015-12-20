@@ -28,9 +28,18 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 from gm_pr.settings_projects import *
+import configparser
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# You can override some settings with a "settings.ini" file project root
+# directory:
+#
+# [backend]
+# BROKER_URL="mybrokerurl"
+# ...
+config = configparser.ConfigParser()
+config.read(os.sep.join([BASE_DIR, "settings.ini"]))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -126,7 +135,8 @@ STATIC_URL = '/static/'
 CELERY_ACCEPT_CONTENT = ['json', 'yaml', 'pickle']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_IMPORTS = ("bot.tasks", "gm_pr.prfetcher")
-BROKER_URL = 'amqp://gm_pr:gm_pr@localhost:5672/gm_pr'
+BROKER_URL = config.get('backend', 'BROKER_URL',
+                        fallback='amqp://gm_pr:gm_pr@localhost:5672/gm_pr')
 CELERY_RESULT_BACKEND = 'amqp'
 
 LOGGING = {
