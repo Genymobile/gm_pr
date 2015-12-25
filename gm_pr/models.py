@@ -16,15 +16,10 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
-
 class Project(models.Model):
     """ Project: group of many github repo
     """
-    name = models.CharField(max_length=256)
-
-    def clean(self):
-        if Project.objects.filter(name=self.name).exists():
-            raise ValidationError('Project %s already exists' % self.name)
+    name = models.CharField(max_length=256, unique=True)
 
     def __eq__(self, other):
         return self.name == other
@@ -36,12 +31,8 @@ class Project(models.Model):
 class Repo(models.Model):
     """ Repo: github repo
     """
-    name = models.CharField(max_length=256)
+    name = models.CharField(max_length=256, unique=True)
     projects = models.ManyToManyField(Project)
-
-    def clean(self):
-        if Repo.objects.filter(name=self.name).exists():
-            raise ValidationError('Repo %s already exists' % self.name)
 
     def __eq__(self, other):
         return self.name == other
