@@ -131,6 +131,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR+'/web/static/'
+
+# force a subdirectory for redirection (like admin)
+# FORCE_SCRIPT_NAME = '/gm_pr'
 
 CELERY_ACCEPT_CONTENT = ['json', 'yaml', 'pickle']
 CELERY_TASK_SERIALIZER = 'json'
