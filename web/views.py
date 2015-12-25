@@ -19,13 +19,18 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from gm_pr import settings, proj_repo
+from gm_pr.models import Project, Repo
 from gm_pr.prfetcher import PrFetcher
 import time
+import logging
+
+logger = logging.getLogger('gm_pr')
+
 
 def index(request):
     if not request.GET:
         context = {'title': "Project list",
-                   'project_list' : sorted(settings.PROJECTS_REPOS.keys())}
+                   'project_list' : Project.objects.order_by('name').all()}
         return render(request, 'index.html', context)
 
     project, repos = proj_repo.proj_repo(request)
@@ -45,7 +50,7 @@ def index(request):
                    "feedback_ko" : settings.FEEDBACK_KO['name']}
 
         after = time.time()
-        print(after - before)
+        logger.debug("page generated in %s sec" % (after - before))
         return render(request, 'pr.html', context)
     else:
         return HttpResponse("No projects found\n", status=404)

@@ -91,7 +91,7 @@ few seconds the list of pull requests should appear in your channel.
 
 ## Hacking
 
-You need to install django for python3 and celery.
+You need to install django for python3, celery and rabbitmq
 
 Here is the command line for MacOS/homebrew
 
@@ -99,15 +99,15 @@ Here is the command line for MacOS/homebrew
 brew doctor
 brew update
 
-brew install python3
-pip3 install django
-pip3 install django-celery
+brew install python3 rabbitmq-server
+pip3 install -r requirements/commons.txt
 ```
 
 On Debian-like system
 
 ```
-sudo apt-get install python3-django python3-django-celery celeryd python3-sqlalchemy rabbitmq-server
+sudo apt-get install python3 celeryd rabbitmq-server
+sudo pip3 install -r requirements/commons.txt
 ```
 
 Create a user and vhost for rabbitmq

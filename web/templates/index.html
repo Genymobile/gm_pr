@@ -17,6 +17,10 @@ limitations under the License.
 -->
 {% endcomment %}
 
+{% block navigation %}
+        <a class="mdl-navigation__link" href="admin">admin</a>
+{% endblock %}
+
 {% block content %}
 <div class="mdl-grid">
     {% for project in project_list %}

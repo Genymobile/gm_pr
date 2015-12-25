@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gm_pr import settings
+from gm_pr.models import Project, Repo
 
 def proj_repo(request):
     """ Retrieve project list from a Slack request or web request.
@@ -30,6 +30,6 @@ def proj_repo(request):
         else:
             project = request.GET['project']
 
-        if project in settings.PROJECTS_REPOS:
-            repos = settings.PROJECTS_REPOS[project]
+        repos = Repo.objects.filter(projects__name=project)
+
     return project, repos

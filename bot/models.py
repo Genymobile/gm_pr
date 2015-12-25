@@ -13,10 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from django.conf.urls import patterns, url
+from django.db import models
 
-from web import views
-
-urlpatterns = [
-    url(r'^.*$', views.index, name='index'),
-]
+# Create your models here.

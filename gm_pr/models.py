@@ -13,24 +13,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-class Pr:
-    """ Simple class wrapper for pr properties
+from django.db import models
+from django.core.exceptions import ValidationError
+
+
+class Project(models.Model):
+    """ Project: group of many github repo
     """
-    def __init__(self, url="", title="", updated_at="", user="", my_open_comment_count=0, last_activity=None,
-                 repo="", nbreview=0, feedback_ok=0, feedback_weak=0,
-                 feedback_ko=0, milestone=None, labels=None,
-                 is_old=False):
-        self.url = url
-        self.title = title
-        self.updated_at = updated_at
-        self.user = user
-        self.my_open_comment_count = my_open_comment_count
-        self.last_activity = last_activity
-        self.repo = repo
-        self.nbreview = nbreview
-        self.feedback_ok = feedback_ok
-        self.feedback_weak = feedback_weak
-        self.feedback_ko = feedback_ko
-        self.milestone = milestone
-        self.labels = labels
-        self.is_old = is_old
+    name = models.CharField(max_length=256)
+
+    def clean(self):
+        if Project.objects.filter(name=self.name).exists():
+            raise ValidationError('Project %s already exists' % self.name)
+
+    def __eq__(self, other):
+        return self.name == other
+
+    def __str__(self):
+        return self.name
+
+
+class Repo(models.Model):
+    """ Repo: github repo
+    """
+    name = models.CharField(max_length=256)
+    projects = models.ManyToManyField(Project)
+
+    def clean(self):
+        if Repo.objects.filter(name=self.name).exists():
+            raise ValidationError('Repo %s already exists' % self.name)
+
+    def __eq__(self, other):
+        return self.name == other
+
+    def __str__(self):
+        return self.name

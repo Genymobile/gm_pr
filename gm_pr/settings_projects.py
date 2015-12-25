@@ -63,18 +63,3 @@ OLD_LABELS = ("Needs Reviews", None)
 FEEDBACK_OK = {"keyword": "LGTM", "name" : "LGTM"}
 FEEDBACK_WEAK = {"keyword" : ":hand:", "name" : "&#9995;"}
 FEEDBACK_KO = {"keyword": ":x:", "name" :"&#10007;"}
-
-# list of repos associated with each project.
-# Here "opensource" is the name of a project (you're free to choose the name you
-# want) and 'genymotion-binocle', 'FridgeCheckup' and 'gm_pr' are Github
-# repository names.
-# Note for slack user: The name of the project (eg: opensource) must match the
-# name of the slack channel
-PROJECTS_REPOS = \
-    {'opensource' : ('genymotion-binocle',
-                      'FridgeCheckup',
-                      'gm_pr',
-                    ),
-     'test' : ('test',
-                )
-    }
