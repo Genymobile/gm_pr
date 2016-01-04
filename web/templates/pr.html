@@ -20,7 +20,7 @@ limitations under the License.
 
 
 {% block navigation %}
-        <a class="mdl-navigation__link" href=".">Back to project list</a>
+        <a class="mdl-navigation__link header-text" href=".">Back to project list</a>
 {% endblock %}
 
 
@@ -34,7 +34,7 @@ limitations under the License.
         <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
             <thead>
             <tr>
-                <th>Last update</th>
+                <th class="mdl-data-table__cell--non-numeric">Last update</th>
                 <th class="alignleft">Last activity</th>
                 <th class="alignleft">Milestone</th>
                 <th class="alignleft">Labels</th>
@@ -53,9 +53,9 @@ limitations under the License.
             {% for pr in prlist %}
             <tr class="pr">
                 {% if pr.is_old %}
-                <td class="highlight">{{pr.updated_at|naturaltime}}</td>
+                <td class="highlight mdl-data-table__cell--non-numeric">{{pr.updated_at|naturaltime}}</td>
                 {% else %}
-                <td>{{pr.updated_at|naturaltime}}</td>
+                <td class="mdl-data-table__cell--non-numeric">{{pr.updated_at|naturaltime}}</td>
                 {% endif %}
                 <td class="alignleft">
                     {% if pr.last_activity %}

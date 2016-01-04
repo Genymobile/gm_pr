@@ -43,7 +43,7 @@ def index(request):
             current_user = request.GET['login']
 
         prf = PrFetcher(settings.TOP_LEVEL_URL, settings.ORG, repos, current_user)
-        context = {"title" : "%s PR list" % project,
+        context = {"title" : project,
                    "projects" : prf.get_prs(),
                    "feedback_ok" : settings.FEEDBACK_OK['name'],
                    "feedback_weak" : settings.FEEDBACK_WEAK['name'],

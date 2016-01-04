@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+body {
+    background-color: #f2f2f2;
+}
 footer {
     position: absolute;
     bottom: 0;
@@ -22,6 +25,13 @@ footer {
 }
 table {
     width: 100%;
+}
+.header-text {
+    color: #f2f2f2 !important;
+}
+.header-title {
+    margin: auto;
+    text-align: center;
 }
 .label {
     padding: 2px;
@@ -51,4 +61,18 @@ td.aligncenter, th.aligncenter {
 .highlight {
     font-weight: bold;
     background-color: #f2ed00
+}
+.expand {
+    width: 100%
+}
+.logo {
+    margin-right: 15px
+}
+.gm-header {
+    padding-left: 40px;
+    padding-right: 40px;
+}
+.page-content {
+    padding-left: 40px;
+    padding-right: 40px;
 }

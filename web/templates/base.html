@@ -24,17 +24,17 @@ limitations under the License.
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" type="text/css" href="{% static 'gm_pr.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <header class="mdl-layout__header">
-        <div class="mdl-layout__header-row">
+        <div class="mdl-layout__header-row gm-header">
             <!-- Title -->
-            <span class="mdl-layout-title">{{title}}</span>
+            <img class="logo" src="{% static 'logo.png' %}" alt="logo"><span class="mdl-layout-title header-text header-title">{{title}}</span>
             <!-- Add spacer, to align navigation to the right -->
-            <div class="mdl-layout-spacer"></div>
             <nav class="mdl-navigation">
                 {% block navigation %}{% endblock %}
             </nav>

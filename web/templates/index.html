@@ -18,18 +18,12 @@ limitations under the License.
 {% endcomment %}
 
 {% block navigation %}
-        <a class="mdl-navigation__link" href="admin">admin</a>
+        <a class="mdl-navigation__link header-text" href="admin/">admin</a>
 {% endblock %}
 
 {% block content %}
 <div class="mdl-grid">
     {% for project in project_list %}
-
-    <style>
-        .expand {
-        width:100%
-        }
-    </style>
 
     <div class="mdl-cell mdl-cell--2-col">
         <div class="mdl-card mdl-shadow--2dp expand">
