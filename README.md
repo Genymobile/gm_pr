@@ -45,10 +45,11 @@ ProxyPassReverse /gm_pr http://localhost:8000
 
 ## Configuration
 
-2 files are used for configuration:
+3 files are used for configuration:
 
  * gm_pr/settings.py: this is the standard Django configuration file
- * gm_pr/settings_projects.py: contains everything related to your projects
+ * gm_pr/settings_projects.py: configure your Github and Slack organization and authentication here.
+ * gm_pr/projects.sql: optional script to programmatically create your projects when launching gm_pr from a docker container.
 
 ### Django configuration
 
