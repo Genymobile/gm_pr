@@ -19,15 +19,13 @@ A Dockerfile is available in the "deploy" folder. Building and running the image
 can be done in a few lines:
 
 ```
-cd deploy
 docker build -t gm_pr .
-docker run -e GM_PR_ORG=MyOrg -e GM_PR_GITHUB_OAUTHTOKEN=xxxx -e GM_PR_ALLOWED_HOSTS="10.0.0.2,10.0.0.3"  -v /path/to/gm_pr:/var/www/gm_pr --name gm_pr -p 8000:80 -d gm_pr
+docker run -e GM_PR_ORG=MyOrg -e GM_PR_GITHUB_OAUTHTOKEN=xxxx -e GM_PR_ALLOWED_HOSTS="10.0.0.2,10.0.0.3" -e GM_PR_INITIAL_PROJECTS="proj1=repo1,repo2;proj2=repo3,repo4" --name gm_pr -p 8000:80 -d gm_pr
 ```
 
-Optionally, you may specify some projects and repositories to be created,
-by using this `docker run` command instead:
+You can attach to the docker container in a bash session, to view logs:
 ```
-docker run -e GM_PR_INITIAL_PROJECTS="proj1=repo1,repo2;proj2=repo3,repo4" -v /path/to/gm_pr:/var/www/gm_pr --name gm_pr -p 8000:80 -d gm_pr
+docker exec -i -t gm_pr bash
 ```
 
 Now, you can simply point your browser to http://localhost:8000.

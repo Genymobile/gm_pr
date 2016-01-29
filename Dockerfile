@@ -22,11 +22,12 @@ RUN apt-get install -y \
     apache2 \
     libapache2-mod-wsgi-py3 \
     python3-pip
-ADD commons.txt /tmp/commons.txt
+COPY deploy/commons.txt /tmp/commons.txt
 RUN pip3 install -r /tmp/commons.txt
-ADD gm_pr.conf /etc/apache2/sites-available/gm_pr.conf
+COPY deploy/gm_pr.conf /etc/apache2/sites-available/gm_pr.conf
 RUN a2ensite gm_pr
 
 EXPOSE 80
+COPY . /var/www/gm_pr
 WORKDIR /var/www/gm_pr
 CMD chown -R www-data:www-data . && supervisord -c deploy/supervisord.conf
