@@ -50,7 +50,11 @@ SECRET_KEY = 'nny#i^ey9pbud@86s9p55r4k2fbd_0e+1#@h9+5z$+3nk2i&ml'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [ "127.0.0.1" ]
+# Either modify the ALLOWED_HOSTS directly in this file:
+# ex: ALLOWED_HOSTS = ["10.0.0.2", "10.0.0.3"]
+# or as an environment variable
+# ex: env GM_PR_ALLOWED_HOSTS="10.0.0.2,10.0.0.3"
+ALLOWED_HOSTS = os.environ.get('GM_PR_ALLOWED_HOSTS', '127.0.0.1').split(",")
 
 
 # Application definition

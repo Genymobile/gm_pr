@@ -21,7 +21,7 @@ can be done in a few lines:
 ```
 cd deploy
 docker build -t gm_pr .
-docker run -v /path/to/gm_pr:/var/www/gm_pr --name gm_pr -p 8000:80 -d gm_pr
+docker run -e GM_PR_ORG=MyOrg -e GM_PR_GITHUB_OAUTHTOKEN=xxxx -e GM_PR_ALLOWED_HOSTS="10.0.0.2,10.0.0.3"  -v /path/to/gm_pr:/var/www/gm_pr --name gm_pr -p 8000:80 -d gm_pr
 ```
 
 Optionally, you may specify some projects and repositories to be created,
@@ -128,12 +128,12 @@ sudo rabbitmqctl set_permissions -p gm_pr gm_pr ".*" ".*" ".*"
 Run the following commands to start the server:
 ```
 python3 manage.py migrate
-python3 manage.py runserver
+env GM_PR_ORG=MyOrg GM_PR_ALLOWED_HOSTS="10.0.0.2,10.0.0.3" python3 manage.py runserver
 ```
 
 Run the following command in a new terminal:
 ```
-python3 manage.py celeryd
+env GM_PR_GITHUB_OAUTHTOKEN=xxxx python3 manage.py celeryd
 ```
 
 Open the web page at http://localhost:8000
