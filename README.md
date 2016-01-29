@@ -19,9 +19,13 @@ A Dockerfile is available in the "deploy" folder. Building and running the image
 can be done in a few lines:
 
 ```
-cd deploy
 docker build -t gm_pr .
-docker run -v /path/to/gm_pr:/var/www/gm_pr --name gm_pr -p 8000:80 -d gm_pr
+docker run --name gm_pr -p 8000:80 -d gm_pr
+```
+
+You can attach to the docker container in a bash session, to view logs:
+```
+docker exec -i -t gm_pr bash
 ```
 
 Now, you can simply point your browser to http://localhost:8000.
