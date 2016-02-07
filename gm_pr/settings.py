@@ -159,7 +159,7 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'gm_pr.log',
+            'filename': os.path.join(BASE_DIR, 'gm_pr.log'),
             'maxBytes': 10000000,
             'backupCount': 5,
             'formatter' : 'verbose',
