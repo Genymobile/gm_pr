@@ -21,7 +21,14 @@
 # env GM_PR_INITIAL_PROJECTS="Material design repos=material-design-lite,material-design-icons;GCM repos=gcm,go-gcm"
 
 from gm_pr import models
+from django.contrib.auth.models import User
 import os
+
+
+User.objects.create_superuser(
+    os.environ.get('GM_PR_ADMIN_LOGIN', 'admin'),
+    os.environ.get('GM_PR_ADMIN_EMAIL', 'admin@localhost'),
+    os.environ.get('GM_PR_ADMIN_PASSWORD', 'admin'))
 
 projects_str = os.environ.get("GM_PR_INITIAL_PROJECTS")
 if projects_str:
