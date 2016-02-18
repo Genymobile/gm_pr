@@ -47,15 +47,17 @@ def slack(url, org, weburl, repos, slackurl, channel):
                     txt += " *%s* -" % (pr.milestone)
                 for label in pr.labels:
                     txt += " *%s* -" % (label['name'])
-                txt += " %s review:%d %s:%d %s:%d" % \
-                       (pr.user, pr.nbreview,
-                        settings.FEEDBACK_OK['keyword'], pr.feedback_ok,
-                        settings.FEEDBACK_WEAK['keyword'], pr.feedback_weak)
+                txt += " %s review: %d" % (pr.user, pr.nbreview)
                 if pr.feedback_ko > 0:
                     txt += " %s" % (settings.FEEDBACK_KO['keyword'])
+                elif pr.feedback_ok > 0:
+                    txt += " %s: *%d*" % \
+                        (settings.FEEDBACK_OK['keyword'], pr.feedback_ok)
+                elif pr.feedback_weak > 0:
+                    txt += " %s: %d" % \
+                        (settings.FEEDBACK_WEAK['keyword'], pr.feedback_weak)
+
                 txt += "\n"
-
-
 
     payload = {"channel": channel,
                "username": "genypr",
