@@ -50,7 +50,11 @@ SECRET_KEY = 'nny#i^ey9pbud@86s9p55r4k2fbd_0e+1#@h9+5z$+3nk2i&ml'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [ "127.0.0.1" ]
+# Either modify the ALLOWED_HOSTS directly in this file:
+# ex: ALLOWED_HOSTS = ["10.0.0.2", "10.0.0.3"]
+# or as an environment variable
+# ex: env GM_PR_ALLOWED_HOSTS="10.0.0.2,10.0.0.3"
+ALLOWED_HOSTS = os.environ.get('GM_PR_ALLOWED_HOSTS', '127.0.0.1').split(",")
 
 
 # Application definition
@@ -131,6 +135,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR+'/web/static/'
+
+# force a subdirectory for redirection (like admin)
+# FORCE_SCRIPT_NAME = '/gm_pr'
 
 CELERY_ACCEPT_CONTENT = ['json', 'yaml', 'pickle']
 CELERY_TASK_SERIALIZER = 'json'
@@ -151,7 +159,7 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'gm_pr.log',
+            'filename': os.path.join(BASE_DIR, 'gm_pr.log'),
             'maxBytes': 10000000,
             'backupCount': 5,
             'formatter' : 'verbose',

@@ -19,9 +19,13 @@ A Dockerfile is available in the "deploy" folder. Building and running the image
 can be done in a few lines:
 
 ```
-cd deploy
 docker build -t gm_pr .
-docker run -v /path/to/gm_pr:/var/www/gm_pr --name gm_pr -p 8000:80 -d gm_pr
+docker run -e GM_PR_ORG=MyOrg -e GM_PR_GITHUB_OAUTHTOKEN=xxxx -e GM_PR_ALLOWED_HOSTS="10.0.0.2,10.0.0.3" -e GM_PR_INITIAL_PROJECTS="proj1=repo1,repo2;proj2=repo3,repo4" -e GM_PR_ADMIN_LOGIN="admin" -e GM_PR_ADMIN_PASSWORD="admin" --name gm_pr -p 8000:80 -d gm_pr
+```
+
+You can attach to the docker container in a bash session, to view logs:
+```
+docker exec -i -t gm_pr bash
 ```
 
 Now, you can simply point your browser to http://localhost:8000.
@@ -48,7 +52,7 @@ ProxyPassReverse /gm_pr http://localhost:8000
 2 files are used for configuration:
 
  * gm_pr/settings.py: this is the standard Django configuration file
- * gm_pr/settings_projects.py: contains everything related to your projects
+ * gm_pr/settings_projects.py: configure your Github and Slack organization and authentication here.
 
 ### Django configuration
 
@@ -122,12 +126,12 @@ sudo rabbitmqctl set_permissions -p gm_pr gm_pr ".*" ".*" ".*"
 Run the following commands to start the server:
 ```
 python3 manage.py migrate
-python3 manage.py runserver
+env GM_PR_ORG=MyOrg GM_PR_ALLOWED_HOSTS="10.0.0.2,10.0.0.3" python3 manage.py runserver
 ```
 
 Run the following command in a new terminal:
 ```
-python3 manage.py celeryd
+env GM_PR_GITHUB_OAUTHTOKEN=xxxx python3 manage.py celeryd
 ```
 
 Open the web page at http://localhost:8000
