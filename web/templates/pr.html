@@ -26,6 +26,8 @@ limitations under the License.
 
 {% block content %}
 
+{% load gm_pr_filters %}
+
 <div class="mdl-grid">
     {% for name, prlist in projects.items %}
 
@@ -50,7 +52,7 @@ limitations under the License.
             </tr>
             </thead>
 
-            {% for pr in prlist %}
+            {% for pr in prlist|sort_prlist %}
             <tr class="pr">
                 {% if pr.is_old %}
                 <td class="highlight mdl-data-table__cell--non-numeric">{{pr.updated_at|naturaltime}}</td>
