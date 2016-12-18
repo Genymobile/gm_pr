@@ -63,8 +63,8 @@ def parse_githubdata(data, current_user):
     data { 'repo': genymotion-libauth,
            detail: paginable,
            label: paginable,
-           comment: paginable,
            json: json,
+           comment: paginable, (optional)
            review_comments: paginable, (optional)
            events: paginable, (optional)
            commits: paginable, (optional)
@@ -109,19 +109,14 @@ def parse_githubdata(data, current_user):
         my_open_comment_count = 0
 
     # look for tags and activity only in main conversation and not in "file changed"
-    for jcomment in data['comment']:
-        body = jcomment['body']
-        if "comments" in settings.LAST_ACTIVITY_FILTER:
+    if "comments" in settings.LAST_ACTIVITY_FILTER:
+        for jcomment in data['comment']:
+            body = jcomment['body']
             comment_activity = practivity.PrActivity(jcomment['updated_at'],
                                                      jcomment['user']['login'],
                                                      "commented")
             last_activity = practivity.get_latest_activity(last_activity, comment_activity)
-        if re.search(settings.FEEDBACK_OK['keyword'], body):
-            feedback_ok += 1
-        if re.search(settings.FEEDBACK_WEAK['keyword'], body):
-            feedback_weak += 1
-        if re.search(settings.FEEDBACK_KO['keyword'], body):
-            feedback_ko += 1
+
     if milestone:
         milestone = milestone['title']
 
@@ -167,10 +162,11 @@ def get_urls_for_repo(repo_name, url, org, current_user):
                              # it in the final data response.
                              # see get_tagdata_from_tagurl
                              'url' : json_pr })
-            tagurls.append({ 'repo' : repo_name,
-                             'tag' : 'comment',
-                             'prid' : json_pr['id'],
-                             'url' : json_pr['comments_url'] })
+            if "comments" in settings.LAST_ACTIVITY_FILTER:
+                tagurls.append({ 'repo' : repo_name,
+                                 'tag' : 'comment',
+                                 'prid' : json_pr['id'],
+                                 'url' : json_pr['comments_url'] })
             tagurls.append({ 'repo' : repo_name,
                              'tag' : 'detail',
                              'prid' : json_pr['id'],
