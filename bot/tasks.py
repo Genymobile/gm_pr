@@ -49,13 +49,9 @@ def slack(url, org, weburl, repos, slackurl, channel):
                     txt += " *%s* -" % (label['name'])
                 txt += " %s review: %d" % (pr.user, pr.nbreview)
                 if pr.feedback_ko > 0:
-                    txt += " %s" % (settings.FEEDBACK_KO['keyword'])
+                    txt += " Req. Changes"
                 elif pr.feedback_ok > 0:
-                    txt += " %s: *%d*" % \
-                        (settings.FEEDBACK_OK['keyword'], pr.feedback_ok)
-                elif pr.feedback_weak > 0:
-                    txt += " %s: %d" % \
-                        (settings.FEEDBACK_WEAK['keyword'], pr.feedback_weak)
+                    txt += " Approved: *%d*" % pr.feedback_ok
 
                 txt += "\n"
 
