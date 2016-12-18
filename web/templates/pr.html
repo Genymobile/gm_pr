@@ -46,9 +46,8 @@ limitations under the License.
                 {% if request.GET.login %}
                 <th class="alignleft">My Open Comments</th>
                 {% endif %}
-                <th class="aligncenter">{{feedback_ok|safe}}</th>
-                <th class="aligncenter">{{feedback_weak|safe}}</th>
-                <th class="aligncenter">{{feedback_ko|safe}}</th>
+                <th class="aligncenter">Approved</th>
+                <th class="aligncenter">Req. Changes</th>
             </tr>
             </thead>
 
@@ -81,7 +80,6 @@ limitations under the License.
                     </td>
                 {% endif %}
                 <td class="feedback_ok aligncenter">{{pr.feedback_ok}}</td>
-                <td class="aligncenter">{{pr.feedback_weak}}</td>
                 <td class="feedback_ko aligncenter">{{pr.feedback_ko}}</td>
             </tr>
 

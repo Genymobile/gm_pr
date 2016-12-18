@@ -39,13 +39,14 @@ TOP_LEVEL_URL = "https://api.github.com"
 
 # Activities to include in the "Last Activity" column.
 # Possible values are:
+# "reviews"
 # "comments" (extra request)
 # "events" (extra request)
 # "commits" (extra request)
 #LAST_ACTIVITY_FILTER = ("comments", "events", "commits") #slower but provides more information
 #LAST_ACTIVITY_FILTER = ("comments") # faster but less information.
 #Ex: env GM_PR_LAST_ACTIVITY_FILTER="comments,events,commits"
-LAST_ACTIVITY_FILTER = tuple(os.environ.get("GM_PR_LAST_ACTIVITY_FILTER", "comments").split(","));
+LAST_ACTIVITY_FILTER = tuple(os.environ.get("GM_PR_LAST_ACTIVITY_FILTER", "reviews,comments").split(","));
 
 ##
 # Slack configuration (ignore this section if you do not use slack)

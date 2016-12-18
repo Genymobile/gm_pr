@@ -29,7 +29,7 @@ class PullRequest:
     """ Simple class wrapper for PullRequest properties
     """
     def __init__(self, url="", title="", updated_at="", user="", my_open_comment_count=0, last_activity=None,
-                 repo="", nbreview=0, feedback_ok=0, feedback_weak=0,
+                 repo="", nbreview=0, feedback_ok=0,
                  feedback_ko=0, milestone=None, labels=None,
                  is_old=False):
         self.url = url
@@ -41,7 +41,6 @@ class PullRequest:
         self.repo = repo
         self.nbreview = nbreview
         self.feedback_ok = feedback_ok
-        self.feedback_weak = feedback_weak
         self.feedback_ko = feedback_ko
         self.milestone = milestone
         self.labels = labels
@@ -74,7 +73,6 @@ def parse_githubdata(data, current_user):
 
     now = timezone.now()
     feedback_ok = 0
-    feedback_weak = 0
     feedback_ko = 0
     milestone = data['json']['milestone']
     labels = list()
@@ -117,6 +115,27 @@ def parse_githubdata(data, current_user):
                                                      "commented")
             last_activity = practivity.get_latest_activity(last_activity, comment_activity)
 
+    review_by_user = {}
+    for review in data['review']:
+        login = review['user']['login']
+        # only last review matter. Assume reviews are ordered and take only the last review
+        # for each user, ignoring COMMENTED
+        if review['state'] == "CHANGES_REQUESTED" or review['state'] == "APPROVED":
+            review_by_user[login] = review['state']
+
+        if "reviews" in settings.LAST_ACTIVITY_FILTER:
+            review_activity = practivity.PrActivity(review['submitted_at'],
+                                                    login,
+                                                    "reviewed")
+            last_activity = practivity.get_latest_activity(last_activity, review_activity)
+
+    for user in review_by_user:
+        if review_by_user[user] == "CHANGES_REQUESTED":
+            feedback_ko += 1
+        elif review_by_user[user] == "APPROVED":
+            feedback_ok += 1
+
+
     if milestone:
         milestone = milestone['title']
 
@@ -131,7 +150,6 @@ def parse_githubdata(data, current_user):
                          nbreview=int(data['detail']['comments']) +
                                   int(data['detail']['review_comments']),
                          feedback_ok=feedback_ok,
-                         feedback_weak=feedback_weak,
                          feedback_ko=feedback_ko,
                          milestone=milestone,
                          labels=labels,
@@ -175,6 +193,10 @@ def get_urls_for_repo(repo_name, url, org, current_user):
                              'tag' : 'label',
                              'prid' : json_pr['id'],
                              'url' : "%s/labels" % json_pr['issue_url'] })
+            tagurls.append({ 'repo' : repo_name,
+                             'tag' : 'review',
+                             'prid' : json_pr['id'],
+                             'url' : "%s/reviews" % json_pr['url'] })
             if current_user:
                 tagurls.append({ 'repo' : repo_name,
                                  'tag' : 'review_comments',
