@@ -39,13 +39,14 @@ TOP_LEVEL_URL = "https://api.github.com"
 
 # Activities to include in the "Last Activity" column.
 # Possible values are:
-# "comments"
-# "events" (slows page loading)
-# "commits" (slows page loading)
+# "reviews"
+# "comments" (slower page loading due to extra request)
+# "events" (slower page loading due to extra request)
+# "commits" (slower page loading due to extra request)
 #LAST_ACTIVITY_FILTER = ("comments", "events", "commits") #slower but provides more information
 #LAST_ACTIVITY_FILTER = ("comments") # faster but less information.
 #Ex: env GM_PR_LAST_ACTIVITY_FILTER="comments,events,commits"
-LAST_ACTIVITY_FILTER = tuple(os.environ.get("GM_PR_LAST_ACTIVITY_FILTER", "comments").split(","));
+LAST_ACTIVITY_FILTER = tuple(os.environ.get("GM_PR_LAST_ACTIVITY_FILTER", "reviews,comments").split(","));
 
 ##
 # Slack configuration (ignore this section if you do not use slack)
@@ -67,12 +68,3 @@ OLD_PERIOD = int(os.environ.get("GM_PR_OLD_PERIOD",4))
 # only PRs with one of those labels can be considered as OLD.
 # Use None for "no label"
 OLD_LABELS = ("Needs Reviews", None)
-
-# gm_pr will parse the "conversation" related to each PR to count those symbols
-# The count is available in the web page and can be used to know if your peers
-# agree to merge this PR or not
-# keyword is the text to search for in the github comments, name is the web
-# page column heading
-FEEDBACK_OK = {"keyword": "LGTM", "name" : "LGTM"}
-FEEDBACK_WEAK = {"keyword" : ":hand:", "name" : "&#9995;"}
-FEEDBACK_KO = {"keyword": ":x:", "name" :"&#10007;"}

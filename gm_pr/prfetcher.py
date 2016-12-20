@@ -29,7 +29,7 @@ class PullRequest:
     """ Simple class wrapper for PullRequest properties
     """
     def __init__(self, url="", title="", updated_at="", user="", my_open_comment_count=0, last_activity=None,
-                 repo="", nbreview=0, feedback_ok=0, feedback_weak=0,
+                 repo="", nbreview=0, feedback_ok=0,
                  feedback_ko=0, milestone=None, labels=None,
                  is_old=False):
         self.url = url
@@ -41,7 +41,6 @@ class PullRequest:
         self.repo = repo
         self.nbreview = nbreview
         self.feedback_ok = feedback_ok
-        self.feedback_weak = feedback_weak
         self.feedback_ko = feedback_ko
         self.milestone = milestone
         self.labels = labels
@@ -63,8 +62,8 @@ def parse_githubdata(data, current_user):
     data { 'repo': genymotion-libauth,
            detail: paginable,
            label: paginable,
-           comment: paginable,
            json: json,
+           comment: paginable, (optional)
            review_comments: paginable, (optional)
            events: paginable, (optional)
            commits: paginable, (optional)
@@ -74,7 +73,6 @@ def parse_githubdata(data, current_user):
 
     now = timezone.now()
     feedback_ok = 0
-    feedback_weak = 0
     feedback_ko = 0
     milestone = data['json']['milestone']
     labels = list()
@@ -109,19 +107,31 @@ def parse_githubdata(data, current_user):
         my_open_comment_count = 0
 
     # look for tags and activity only in main conversation and not in "file changed"
-    for jcomment in data['comment']:
-        body = jcomment['body']
-        if "comments" in settings.LAST_ACTIVITY_FILTER:
+    if "comments" in settings.LAST_ACTIVITY_FILTER:
+        for jcomment in data['comment']:
+            body = jcomment['body']
             comment_activity = practivity.PrActivity(jcomment['updated_at'],
                                                      jcomment['user']['login'],
                                                      "commented")
             last_activity = practivity.get_latest_activity(last_activity, comment_activity)
-        if re.search(settings.FEEDBACK_OK['keyword'], body):
-            feedback_ok += 1
-        if re.search(settings.FEEDBACK_WEAK['keyword'], body):
-            feedback_weak += 1
-        if re.search(settings.FEEDBACK_KO['keyword'], body):
-            feedback_ko += 1
+
+    review_by_user = {}
+    for review in data['review']:
+        login = review['user']['login']
+        # only last review matter. Assume reviews are ordered and take only the last review
+        # for each user, ignoring COMMENTED
+        if review['state'] == "CHANGES_REQUESTED" or review['state'] == "APPROVED":
+            review_by_user[login] = review['state']
+
+        if "reviews" in settings.LAST_ACTIVITY_FILTER:
+            review_activity = practivity.PrActivity(review['submitted_at'],
+                                                    login,
+                                                    "reviewed")
+            last_activity = practivity.get_latest_activity(last_activity, review_activity)
+
+    feedback_ok = sum(1 for k,v in review_by_user.items() if v == "APPROVED")
+    feedback_ko = sum(1 for k,v in review_by_user.items() if v == "CHANGES_REQUESTED")
+
     if milestone:
         milestone = milestone['title']
 
@@ -136,7 +146,6 @@ def parse_githubdata(data, current_user):
                          nbreview=int(data['detail']['comments']) +
                                   int(data['detail']['review_comments']),
                          feedback_ok=feedback_ok,
-                         feedback_weak=feedback_weak,
                          feedback_ko=feedback_ko,
                          milestone=milestone,
                          labels=labels,
@@ -167,10 +176,11 @@ def get_urls_for_repo(repo_name, url, org, current_user):
                              # it in the final data response.
                              # see get_tagdata_from_tagurl
                              'url' : json_pr })
-            tagurls.append({ 'repo' : repo_name,
-                             'tag' : 'comment',
-                             'prid' : json_pr['id'],
-                             'url' : json_pr['comments_url'] })
+            if "comments" in settings.LAST_ACTIVITY_FILTER:
+                tagurls.append({ 'repo' : repo_name,
+                                 'tag' : 'comment',
+                                 'prid' : json_pr['id'],
+                                 'url' : json_pr['comments_url'] })
             tagurls.append({ 'repo' : repo_name,
                              'tag' : 'detail',
                              'prid' : json_pr['id'],
@@ -179,6 +189,10 @@ def get_urls_for_repo(repo_name, url, org, current_user):
                              'tag' : 'label',
                              'prid' : json_pr['id'],
                              'url' : "%s/labels" % json_pr['issue_url'] })
+            tagurls.append({ 'repo' : repo_name,
+                             'tag' : 'review',
+                             'prid' : json_pr['id'],
+                             'url' : "%s/reviews" % json_pr['url'] })
             if current_user:
                 tagurls.append({ 'repo' : repo_name,
                                  'tag' : 'review_comments',
