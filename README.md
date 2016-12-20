@@ -66,8 +66,8 @@ the docker / apache configuration.
 
 ### Gm_pr configuration
 
-Open **gm_pr/settings_projects.py** and read the comments. You'll need to change
-most of the configuration here, but the file is self-documenting.
+Open **gm_pr/settings_projects.py** and read the comments. You should be able
+to customize your installation by setting environment variables.
 
 ### Slack configuration
 

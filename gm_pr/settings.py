@@ -54,7 +54,7 @@ DEBUG = False
 # ex: ALLOWED_HOSTS = ["10.0.0.2", "10.0.0.3"]
 # or as an environment variable
 # ex: env GM_PR_ALLOWED_HOSTS="10.0.0.2,10.0.0.3"
-ALLOWED_HOSTS = os.environ.get('GM_PR_ALLOWED_HOSTS', '127.0.0.1').split(",")
+ALLOWED_HOSTS = os.environ.get('GM_PR_ALLOWED_HOSTS', '127.0.0.1,localhost').split(",")
 
 
 # Application definition
