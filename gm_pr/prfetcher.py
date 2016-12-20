@@ -129,12 +129,8 @@ def parse_githubdata(data, current_user):
                                                     "reviewed")
             last_activity = practivity.get_latest_activity(last_activity, review_activity)
 
-    for user in review_by_user:
-        if review_by_user[user] == "CHANGES_REQUESTED":
-            feedback_ko += 1
-        elif review_by_user[user] == "APPROVED":
-            feedback_ok += 1
-
+    feedback_ok = sum(1 for k,v in review_by_user.items() if v == "APPROVED")
+    feedback_ko = sum(1 for k,v in review_by_user.items() if v == "CHANGES_REQUESTED")
 
     if milestone:
         milestone = milestone['title']
