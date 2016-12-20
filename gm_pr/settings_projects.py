@@ -40,9 +40,9 @@ TOP_LEVEL_URL = "https://api.github.com"
 # Activities to include in the "Last Activity" column.
 # Possible values are:
 # "reviews"
-# "comments" (extra request)
-# "events" (extra request)
-# "commits" (extra request)
+# "comments" (slower page loading due to extra request)
+# "events" (slower page loading due to extra request)
+# "commits" (slower page loading due to extra request)
 #LAST_ACTIVITY_FILTER = ("comments", "events", "commits") #slower but provides more information
 #LAST_ACTIVITY_FILTER = ("comments") # faster but less information.
 #Ex: env GM_PR_LAST_ACTIVITY_FILTER="comments,events,commits"
