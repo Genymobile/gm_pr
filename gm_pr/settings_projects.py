@@ -31,9 +31,9 @@ import os
 
 
 # generate a token here: https://github.com/settings/tokens
-GITHUB_OAUTHTOKEN = os.environ.get('GM_PR_GITHUB_OAUTHTOKEN');
+GITHUB_OAUTHTOKEN = os.environ.get('GM_PR_GITHUB_OAUTHTOKEN')
 # name of your github organisation
-ORG = os.environ.get('GM_PR_ORG', 'Genymobile');
+ORG = os.environ.get('GM_PR_ORG', 'Genymobile')
 # do not change this :-)
 TOP_LEVEL_URL = "https://api.github.com"
 
@@ -46,7 +46,7 @@ TOP_LEVEL_URL = "https://api.github.com"
 #LAST_ACTIVITY_FILTER = ("comments", "events", "commits") #slower but provides more information
 #LAST_ACTIVITY_FILTER = ("comments") # faster but less information.
 #Ex: env GM_PR_LAST_ACTIVITY_FILTER="comments,events,commits"
-LAST_ACTIVITY_FILTER = tuple(os.environ.get("GM_PR_LAST_ACTIVITY_FILTER", "reviews,comments").split(","));
+LAST_ACTIVITY_FILTER = tuple(os.environ.get("GM_PR_LAST_ACTIVITY_FILTER", "reviews,comments").split(","))
 
 ##
 # Slack configuration (ignore this section if you do not use slack)
@@ -64,7 +64,7 @@ SLACK_URL = "https://hooks.slack.com/services/xxxx"
 ##
 
 # Number of days a PRs without update can be flagged as OLD.
-OLD_PERIOD = int(os.environ.get("GM_PR_OLD_PERIOD",4))
+OLD_PERIOD = int(os.environ.get("GM_PR_OLD_PERIOD", 4))
 # only PRs with one of those labels can be considered as OLD.
 # Use None for "no label"
 OLD_LABELS = ("Needs Reviews", None)
