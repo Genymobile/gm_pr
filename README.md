@@ -59,8 +59,10 @@ ProxyPassReverse /gm_pr http://localhost:8000
 Refer to the django project if you want to change the configuration.
 Normally you should only need to adjust a few settings:
 
-**ALLOWED_HOSTS** You may want to add the name of your server if you use
-the docker / apache configuration.
+**ALLOWED_HOSTS** list the hosts allowed to connect to this app.
+Use "*" to allow everything.
+This is the first thing to check if you see a "Bad Request (400)"
+This parameter is configurable with environment variable `GM_PR_ALLOWED_HOSTS`
 
 **STATIC_URL** Add the full URL to your static directory
 
