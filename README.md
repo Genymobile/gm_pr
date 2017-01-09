@@ -88,6 +88,21 @@ Then you need to add a incoming-webhook to let the bot send messages to Slack:
 Now, go to the channel related to your project and type "/pr". After a
 few seconds the list of pull requests should appear in your channel.
 
+### Environment variables
+
+ * `GM_PR_ALLOWED_HOSTS`: list of host allowed to connect on the app (default "*")
+ * `GM_PR_GITHUB_OAUTHTOKEN`: github oauth token
+ * `GM_PR_ORG`: github organisation
+ * `GM_PR_LAST_ACTIVITY_FILTER`: Info in the activity column (see settings_project.py)
+ * `GM_PR_WEB_URL`: used by slackbot, link to the web version
+ * `GM_PR_SLACK_TOKEN`: slack token
+ * `GM_PR_SLACK_URL`: slack hook url
+ * `GM_PR_OLD_PERIOD`: number of days before a PR is marked as old
+ * `GM_PR_ADMIN_LOGIN`: django admin login
+ * `GM_PR_ADMIN_EMAL`: django admin email
+ * `GM_PR_ADMIN_PASSWORD`: django admin password
+ * `GM_PR_INITIAL_PROJECTS`: comma separated initial project "project1=repo1,repo2;project2=repo3"
+
 ## Hacking
 
 You need to install django for python3, celery and rabbitmq
