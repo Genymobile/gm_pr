@@ -15,41 +15,24 @@ As a bonus, we also have a slack bot :-)
 
 The recommended method to run gm_pr is to use the docker image.
 
-A Dockerfile is available in the "deploy" folder. Building and running the image
+A [Dockerfile](Dockerfile) is available. Building and running the image
 can be done in a few lines:
 
 ```
 docker build -t gm_pr .
-docker run -e GM_PR_ORG=MyOrg -e GM_PR_GITHUB_OAUTHTOKEN=xxxx -e GM_PR_ALLOWED_HOSTS="10.0.0.2,10.0.0.3" -e GM_PR_INITIAL_PROJECTS="proj1=repo1,repo2;proj2=repo3,repo4" -e GM_PR_ADMIN_LOGIN="admin" -e GM_PR_ADMIN_PASSWORD="admin" --name gm_pr -p 8000:80 -d gm_pr
+docker run -e GM_PR_ORG=MyOrg -e GM_PR_GITHUB_OAUTHTOKEN=xxxx -e GM_PR_ADMIN_LOGIN="admin" -e GM_PR_ADMIN_PASSWORD="admin" --name gm_pr -p 8000:80 -d gm_pr
 ```
 
-You can attach to the docker container in a bash session, to view logs:
-```
-docker exec -i -t gm_pr bash
-```
+ * GM_PR_ORG: Your Github organisation
+ * GM_PR_GITHUB_OAUTHTOKEN: oauth token for your github account, see https://github.com/settings/tokens
+ * GM_PR_ADMIN_LOGIN and GM_PR_ADMIN_PASSWORD configure a login/password for gm_pr administration
 
 Now, you can simply point your browser to http://localhost:8000.
 
-If you want to make gm_pr available on your external interface, configure a
-reverse proxy with apache. You can use this snippet:
-
-```
-<Proxy http://localhost:8000/>
-        Order deny,allow
-        Allow from all
-</Proxy>
-
-ProxyPass /gm_pr http://localhost:8000
-ProxyPassReverse /gm_pr http://localhost:8000
-
-<Location /gm_pr/bot>
-        Require all granted
-</Location>
-```
-
 ## Configuration
 
-2 files are used for configuration:
+The prefered way to configure gm_pr is to set environment variables for docker.
+Alternatively, you can modify 2 files:
 
  * gm_pr/settings.py: this is the standard Django configuration file
  * gm_pr/settings_projects.py: configure your Github and Slack organization and authentication here.
@@ -59,15 +42,27 @@ ProxyPassReverse /gm_pr http://localhost:8000
 Refer to the django project if you want to change the configuration.
 Normally you should only need to adjust a few settings:
 
-**ALLOWED_HOSTS** You may want to add the name of your server if you use
-the docker / apache configuration.
+**ALLOWED_HOSTS** list the hosts allowed to connect to this app.
+Use "*" to allow everything.
+This is the first thing to check if you see a "Bad Request (400)"
+This parameter is configurable with environment variable `GM_PR_ALLOWED_HOSTS`
 
 **STATIC_URL** Add the full URL to your static directory
 
 ### Gm_pr configuration
 
-Open **gm_pr/settings_projects.py** and read the comments. You'll need to change
-most of the configuration here, but the file is self-documenting.
+Open **gm_pr/settings_projects.py** and read the comments. You should be able
+to customize your installation by setting environment variables.
+
+### add projects
+
+To add projects, visit the "admin/" page. Add a *project* then add all the
+related github *repo*s
+
+You can also have some inital projects when starting docker with the environment
+variable `GM_PR_INITIAL_PROJECTS`
+
+eg: `GM_PR_INITIAL_PROJECTS="Material design repos=material-design-lite,material-design-icons;GCM repos=gcm,go-gcm"`
 
 ### Slack configuration
 
@@ -75,7 +70,7 @@ You can see your pull requests from Slack.
 
 You need to add a "slash command" in the slack settings:
 
- * Open https://mydomain.slack.com/services/new/slash-commands
+ * Open https://my.slack.com/services/new/slash-commands
  * Choose a command name, for eg: "/pr"
  * For the URL, append "/bot/" to your gm_pr URL.
  * In order to make things easy with the Django CSRF protection, you have to
@@ -85,13 +80,28 @@ You need to add a "slash command" in the slack settings:
 
 Then you need to add a incoming-webhook to let the bot send messages to Slack:
 
- * Open https://mydomain.slack.com/services/new/incoming-webhook
+ * Open https://my.slack.com/services/new/incoming-webhook
  * Choose a channel (the bot will be able to override it, so it doesn't really
  matter what you enter)
  * Copy the webhook URL in **setting_project.py** (**SLACK_URL**)
 
 Now, go to the channel related to your project and type "/pr". After a
 few seconds the list of pull requests should appear in your channel.
+
+### Environment variables
+
+ * `GM_PR_ALLOWED_HOSTS`: list of host allowed to connect on the app (default "*")
+ * `GM_PR_GITHUB_OAUTHTOKEN`: github oauth token
+ * `GM_PR_ORG`: github organisation
+ * `GM_PR_LAST_ACTIVITY_FILTER`: Info in the activity column (see settings_project.py)
+ * `GM_PR_WEB_URL`: used by slackbot, link to the web version
+ * `GM_PR_SLACK_TOKEN`: slack token
+ * `GM_PR_SLACK_URL`: slack hook url
+ * `GM_PR_OLD_PERIOD`: number of days before a PR is marked as old
+ * `GM_PR_ADMIN_LOGIN`: django admin login
+ * `GM_PR_ADMIN_EMAL`: django admin email
+ * `GM_PR_ADMIN_PASSWORD`: django admin password
+ * `GM_PR_INITIAL_PROJECTS`: comma separated initial project "project1=repo1,repo2;project2=repo3"
 
 ## Hacking
 

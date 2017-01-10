@@ -53,11 +53,11 @@ LAST_ACTIVITY_FILTER = tuple(os.environ.get("GM_PR_LAST_ACTIVITY_FILTER", "revie
 ##
 
 # link to the web version
-WEB_URL = "http://www.example.org/gm_pr/"
+WEB_URL = os.environ.get('GM_PR_WEB_URL', 'https://gmpr.example.org')
 # slack authentification token
-SLACK_TOKEN = "xxx"
+SLACK_TOKEN = os.environ.get('GM_PR_SLACK_TOKEN')
 # incoming-webhook url
-SLACK_URL = "https://hooks.slack.com/services/xxxx"
+SLACK_URL = os.environ.get('GM_PR_SLACK_URL')
 
 ##
 # Project configuration
