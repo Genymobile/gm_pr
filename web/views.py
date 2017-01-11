@@ -34,17 +34,24 @@ def index(request):
         return render(request, 'index.html', context)
 
     project, repos = proj_repo.proj_repo(request)
+    columns = Project.objects.get(name=project).columns.all()
+    column_names = []
+    for column in columns:
+        column_names.append(column.name)
 
-    if repos != None:
+    if repos:
         before = time.time()
 
         current_user = None
         if 'login' in request.GET:
             current_user = request.GET['login']
 
+        # We could optimize PrFetch by adjusting the number of request with the displayed columns.
+        # However, this will make testing more difficult and code more complex.
         prf = PrFetcher(settings.TOP_LEVEL_URL, settings.ORG, repos, current_user)
         context = {"title" : project,
-                   "projects" : prf.get_prs()}
+                   "projects" : prf.get_prs(),
+                   "columns" : column_names}
 
         after = time.time()
         logger.debug("page generated in %s sec" % (after - before))
