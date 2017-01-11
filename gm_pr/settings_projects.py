@@ -50,7 +50,7 @@ LAST_ACTIVITY_FILTER = tuple(os.environ.get("GM_PR_LAST_ACTIVITY_FILTER", "revie
 
 
 DEFAULT_COLUMNS=tuple(os.environ.get("GM_PR_DEFAULT_COLUMNS",
-                                     "lastupdate,lastactivity,labels,title,user,reviews,opencomments,approved,reqchanges").split(","))
+                                     "lastupdate,lastactivity,labels,title,user,reviews,opencomments,approved,reqchanges,targetbranch").split(","))
 
 ##
 # Slack configuration (ignore this section if you do not use slack)

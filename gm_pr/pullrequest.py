@@ -4,7 +4,8 @@ class PullRequest:
     def __init__(self, url="", title="", updated_at="", user="", my_open_comment_count=0,
                  last_activity=None, repo="",
                  nbreview=0, feedback_ok=0, feedback_ko=0,
-                 milestone=None, labels=None, is_old=False):
+                 milestone=None, labels=None, is_old=False,
+                 targetbranch=None):
         self.url = url
         self.title = title
         self.updated_at = updated_at
@@ -18,3 +19,4 @@ class PullRequest:
         self.milestone = milestone
         self.labels = labels
         self.is_old = is_old
+        self.targetbranch = targetbranch

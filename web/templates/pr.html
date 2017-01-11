@@ -48,6 +48,9 @@ limitations under the License.
                 {% if "labels" in columns %}
                 <th class="alignleft">Labels</th>
                 {% endif %}
+                {% if "targetbranch" in columns %}
+                <th class="alignleft">Target Branch</th>
+                {% endif %}
                 {% if "title" in columns %}
                 <th class="alignleft">Title</th>
                 {% endif %}
@@ -94,6 +97,9 @@ limitations under the License.
                         <span class="label label-{{ label.style }}" style="background-color:#{{label.color}}">{{label.name}}</span><br>
                     {% endfor %}
                 </td>
+                {% endif %}
+                {% if "targetbranch" in columns %}
+                <td class="alignleft">{{pr.targetbranch}}</td>
                 {% endif %}
                 {% if "title" in columns %}
                 <td class="title alignleft"><a href="{{pr.url}}">{{pr.title}}</a></td>
