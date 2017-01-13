@@ -66,14 +66,10 @@ def is_color_light(rgb_hex_color_string):
 def get_open_comment_count(review_comments, user):
     """ Return the number of non-obsolete review comments posted on the given
         PR url, by the given user."""
-    open_comment_count = 0
-    for review_comment in review_comments:
-        # In obsolote comments, the position is None
-        if review_comment['position'] and \
-           review_comment['user']['login'] == user:
-            open_comment_count += 1
-    return open_comment_count
-
+    return sum(1 for review_comment in review_comments
+               # In obsolote comments, the position is None
+               if review_comment['position'] and
+               review_comment['user']['login'] == user)
 
 class GithubPr:
     """ This class map a PR in Github, all data are fetched.
