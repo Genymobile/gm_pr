@@ -13,92 +13,79 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json, urllib.request, urllib.error
+import json
+import urllib.request
+import urllib.error
 import logging
 
 logger = logging.getLogger('gm_pr')
 
 class PaginableJson:
-    """ fetch json data with automatic pagination
+    """ fetch json data and follow pagination
     Auth is managed in __init__.py in this module
+    If the request returns a list of json, this class is iterable and like a
+    list of json dictionnary.
+    Otherwise it behave like a dictionnary
     """
-    def __fetch_data(self, url):
-        self.__idx = 0
-        if self.__end:
-            raise StopIteration
-        if self.__last_url == url:
-            self.__end = True
+    def __init__(self, url):
+        self.__url = url
+        self.__data = []
+        self.__fetch_data()
 
+    def __get_page(self, url):
         try:
             response = urllib.request.urlopen(url)
         except urllib.error.URLError as e:
             logger.warning("cannot open %s: %s", url, e.reason)
-            self.__data = {}
-            return
+            return (None, [])
 
         charset = response.info().get_content_charset()
-        if charset == None:
+        if not charset:
             charset = 'utf-8'
+        return (response, json.loads(response.read().decode(charset)))
 
-        if 'Link' in response.info():
-            #pagination
-            for infopage in response.info()['Link'].split(','):
-                if infopage.split(';')[1].strip() == 'rel="next"':
-                    self.__next_url = infopage.split(';')[0].strip()
-                if infopage.split(';')[1].strip() == 'rel="last"':
-                    # overrided at each call...
-                    self.__last_url = infopage.split(';')[0].strip()
 
+    def __fetch_data(self):
+        last_url = None
+        url = self.__url
+
+        (response, data) = self.__get_page(url)
+        if not response:
+            return
+
+        if 'Link' not in response.info():
+            self.__data = data
         else:
-            #no pagination
-            self.__next_url = None
+            self.__data.extend(data)
+            while True:
+                for infopage in response.info()['Link'].split(','):
+                    if infopage.split(';')[1].strip() == 'rel="next"':
+                        url = infopage.split(';')[0].strip()
+                    if infopage.split(';')[1].strip() == 'rel="last"':
+                        # overrided at each iter...
+                        last_url = infopage.split(';')[0].strip()
 
-        self.__data = json.loads(response.read().decode(charset))
+                (response, data) = self.__get_page(url)
+                if not response:
+                    break
 
-    def __retrieve_data(self):
-        data = self.__data
-        idx = self.__idx
-        if not isinstance(data, list):
-            return data
-        if self.__idx >= len(self.__data) - 1:
-            self.__data = None
-        self.__idx += 1
-        return data[idx]
+                self.__data.extend(data)
+
+                if url == last_url or "page=0" in last_url:
+                    break
+
 
     def get_last(self):
-        if self.__last_url is not None:
-            self.__fetch_data(self.__last_url)
         return self.__data[-1]
 
-    def __init__(self, url):
-        self.__url = url
-        self.__next_url = None
-        self.__last_url = None
-        self.__data = None
-        self.__idx = 0
-        self.__end = False
-        # need to get data now, len is called before iteration
-        self.__fetch_data(url)
-
-
     def __iter__(self):
-        return self
-
-    def __next__(self):
-        # current batch not yet exausted or first call
-        if self.__data:
-            return self.__retrieve_data()
-
-        # not paginable
-        if not self.__next_url:
-            raise StopIteration
-
-        self.__fetch_data(self.__next_url)
-        return self.__retrieve_data()
+        return self.__data.__iter__()
 
     def __len__(self):
         return len(self.__data)
 
-
     def __getitem__(self, key):
         return self.__data[key]
+
+    def __str__(self):
+        return "PaginableJson %s" % str(self.__data)

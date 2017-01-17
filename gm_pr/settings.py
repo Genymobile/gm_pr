@@ -137,11 +137,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR+'/web/static/'
 
-# force a subdirectory for redirection (like admin)
-# FORCE_SCRIPT_NAME = '/gm_pr'
-
 CELERY_ACCEPT_CONTENT = ['json', 'yaml', 'pickle']
-CELERY_TASK_SERIALIZER = 'json'
+
 CELERY_IMPORTS = ("bot.tasks", "gm_pr.prfetcher")
 BROKER_URL = config.get('backend', 'BROKER_URL',
                         fallback='amqp://gm_pr:gm_pr@localhost:5672/gm_pr')
