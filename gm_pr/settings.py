@@ -112,7 +112,7 @@ WSGI_APPLICATION = 'gm_pr.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'rw', 'db.sqlite3'),
     }
 }
 
@@ -156,7 +156,7 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'gm_pr.log'),
+            'filename': os.path.join(BASE_DIR, 'rw', 'gm_pr.log'),
             'maxBytes': 10000000,
             'backupCount': 5,
             'formatter' : 'verbose',

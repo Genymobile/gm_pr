@@ -30,4 +30,6 @@ RUN a2ensite gm_pr
 EXPOSE 80
 COPY . /var/www/gm_pr
 WORKDIR /var/www/gm_pr
-CMD chown -R www-data:www-data . && supervisord -c deploy/supervisord.conf
+RUN mkdir rw
+RUN chown -R www-data:www-data rw
+CMD supervisord -c deploy/supervisord.conf
