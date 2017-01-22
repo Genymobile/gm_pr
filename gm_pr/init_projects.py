@@ -22,13 +22,19 @@
 
 from gm_pr import models
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 import os
+import logging
 
+logger = logging.getLogger('gm_pr')
 
-User.objects.create_superuser(
-    os.environ.get('GM_PR_ADMIN_LOGIN', 'admin'),
-    os.environ.get('GM_PR_ADMIN_EMAIL', 'admin@localhost'),
-    os.environ.get('GM_PR_ADMIN_PASSWORD', 'admin'))
+try:
+    User.objects.create_superuser(
+        os.environ.get('GM_PR_ADMIN_LOGIN', 'admin'),
+        os.environ.get('GM_PR_ADMIN_EMAIL', 'admin@localhost'),
+        os.environ.get('GM_PR_ADMIN_PASSWORD', 'admin'))
+except IntegrityError as e:
+    logger.warning("admin user already created")
 
 projects_str = os.environ.get("GM_PR_INITIAL_PROJECTS")
 if projects_str:
