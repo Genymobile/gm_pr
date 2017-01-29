@@ -15,11 +15,30 @@
 
 from django.db import models
 from django.core.exceptions import ValidationError
+from gm_pr import settings_projects
+
+
+class Column(models.Model):
+    """ Info you want to display (milestone, activity, title, ...)
+    """
+    name = models.CharField(max_length=256, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+def default_columns():
+    columns = []
+    for column in settings_projects.DEFAULT_COLUMNS:
+        columns.append(Column.objects.get(name=column))
+
+    return columns
 
 class Project(models.Model):
     """ Project: group of many github repo
     """
     name = models.CharField(max_length=256, unique=True)
+    columns = models.ManyToManyField("Column", default=default_columns)
 
     def __eq__(self, other):
         return self.name == other
