@@ -20,7 +20,9 @@ can be done in a few lines:
 
 ```
 docker build -t gm_pr .
-docker run -e GM_PR_ORG=MyOrg -e GM_PR_GITHUB_OAUTHTOKEN=xxxx -e GM_PR_ADMIN_LOGIN="admin" -e GM_PR_ADMIN_PASSWORD="admin" --name gm_pr -p 8000:80 -d gm_pr
+docker volume create --name gmpr
+# mount the volume in /var/www/gm_pr/rw for log and sqlite db
+docker run -v gmpr:/var/www/gm_pr/rw -e GM_PR_ORG=MyOrg -e GM_PR_GITHUB_OAUTHTOKEN=xxxx -e GM_PR_ADMIN_LOGIN="admin" -e GM_PR_ADMIN_PASSWORD="admin" --name gm_pr -p 8000:80 -d gm_pr
 ```
 
  * GM_PR_ORG: Your Github organisation
