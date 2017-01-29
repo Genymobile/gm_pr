@@ -125,6 +125,7 @@ class GithubPr:
         labels = list()
         last_event = None
         last_commit = None
+        targetbranch = None
 
         if self.__events:
             last_event = practivity.get_latest_event(self.__events)
@@ -197,6 +198,8 @@ class GithubPr:
                          feedback_ko=feedback_ko,
                          milestone=milestone,
                          labels=labels,
-                         is_old=is_old)
+                         is_old=is_old,
+                         targetbranch=self.__info['base']['ref'],
+        )
 
         return pr

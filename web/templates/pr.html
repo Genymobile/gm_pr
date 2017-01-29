@@ -36,51 +36,93 @@ limitations under the License.
         <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
             <thead>
             <tr>
+                {% if "lastupdate" in columns %}
                 <th class="mdl-data-table__cell--non-numeric">Last update</th>
+                {% endif %}
+                {% if "lastactivity" in columns %}
                 <th class="alignleft">Last activity</th>
+                {% endif %}
+                {% if "milestone" in columns %}
                 <th class="alignleft">Milestone</th>
+                {% endif %}
+                {% if "labels" in columns %}
                 <th class="alignleft">Labels</th>
+                {% endif %}
+                {% if "targetbranch" in columns %}
+                <th class="alignleft">Target Branch</th>
+                {% endif %}
+                {% if "title" in columns %}
                 <th class="alignleft">Title</th>
+                {% endif %}
+                {% if "user" in columns %}
                 <th class="alignleft">User</th>
+                {% endif %}
+                {% if "reviews" in columns %}
                 <th class="aligncenter">Reviews</th>
-                {% if request.GET.login %}
+                {% endif %}
+                {% if request.GET.login and "opencomments" in columns %}
                 <th class="alignleft">My Open Comments</th>
                 {% endif %}
+                {% if "approved" in columns %}
                 <th class="aligncenter">Approved</th>
+                {% endif %}
+                {% if "reqchanges" in columns %}
                 <th class="aligncenter">Req. Changes</th>
+                {% endif %}
             </tr>
             </thead>
 
             {% for pr in prlist|sort_prlist %}
             <tr class="pr">
-                {% if pr.is_old %}
-                <td class="highlight mdl-data-table__cell--non-numeric">{{pr.updated_at|naturaltime}}</td>
-                {% else %}
-                <td class="mdl-data-table__cell--non-numeric">{{pr.updated_at|naturaltime}}</td>
+                {% if "lastupdate" in columns %}
+                  {% if pr.is_old %}
+                  <td class="highlight mdl-data-table__cell--non-numeric">{{pr.updated_at|naturaltime}}</td>
+                  {% else %}
+                  <td class="mdl-data-table__cell--non-numeric">{{pr.updated_at|naturaltime}}</td>
+                  {% endif %}
                 {% endif %}
+                {% if "lastactivity" in columns %}
                 <td class="alignleft">
                     {% if pr.last_activity %}
                         {{pr.last_activity.user}}<br>({{pr.last_activity.event}})
                     {% endif %}
                 </td>
+                {% endif %}
+                {% if "milestone" in columns %}
                 <td class="alignleft">{% if pr.milestone %}{{pr.milestone}}{% endif %}</td>
+                {% endif %}
+                {% if "labels" in columns %}
                 <td class="alignleft">
                     {% for label in pr.labels %}
                         <span class="label label-{{ label.style }}" style="background-color:#{{label.color}}">{{label.name}}</span><br>
                     {% endfor %}
                 </td>
+                {% endif %}
+                {% if "targetbranch" in columns %}
+                <td class="alignleft">{{pr.targetbranch}}</td>
+                {% endif %}
+                {% if "title" in columns %}
                 <td class="title alignleft"><a href="{{pr.url}}">{{pr.title}}</a></td>
+                {% endif %}
+                {% if "user" in columns %}
                 <td class="user alignleft">{{pr.user}}</td>
+                {% endif %}
+                {% if "reviews" in columns %}
                 <td class="nbrev aligncenter">{{pr.nbreview}}</td>
-                {% if request.GET.login %}
+                {% endif %}
+                {% if request.GET.login and "opencomments" in columns %}
                     <td class="alignleft">
                         {% if pr.my_open_comment_count > 0 %}
                             {{pr.my_open_comment_count}}
                         {% endif %}
                     </td>
                 {% endif %}
+                {% if "approved" in columns %}
                 <td class="feedback_ok aligncenter">{{pr.feedback_ok}}</td>
+                {% endif %}
+                {% if "reqchanges" in columns %}
                 <td class="feedback_ko aligncenter">{{pr.feedback_ko}}</td>
+                {% endif %}
             </tr>
 
             {% endfor %}
