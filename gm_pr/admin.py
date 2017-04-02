@@ -14,6 +14,8 @@
 # limitations under the License.
 
 from django.contrib import admin
+from django.db import models
+from django.forms import CheckboxSelectMultiple
 from gm_pr.models import Project, Repo
 
 from django.contrib.auth.models import Group, User
@@ -45,3 +47,6 @@ class ProjectAdmin(ImportExportModelAdmin):
 @admin.register(Repo)
 class RepoAdmin(ImportExportModelAdmin):
     resource_class = RepoResource
+    formfield_overrides = {
+        models.ManyToManyField: {'widget': CheckboxSelectMultiple},
+    }
