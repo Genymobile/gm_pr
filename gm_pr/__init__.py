@@ -31,8 +31,7 @@ class GithubTokenHttpsHandler(request.HTTPSHandler):
     def https_request(self, req):
         super().https_request(req)
         req.add_header('Authorization', 'token %s' % self.__token)
-        # FIXME: remove when review api is stable (https://developer.github.com/changes/2016-12-16-review-requests-api/)
-        req.add_header('Accept', 'application/vnd.github.black-cat-preview+json')
+        req.add_header('Accept', 'application/vnd.github.v3+json')
 
         return req
 
