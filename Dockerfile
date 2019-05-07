@@ -28,6 +28,7 @@ COPY requirements/commons.txt /tmp/commons.txt
 RUN pip3 install -r /tmp/commons.txt
 COPY deploy/gm_pr.conf /etc/apache2/sites-available/gm_pr.conf
 RUN a2ensite gm_pr
+RUN mkdir /var/run/apache2
 
 EXPOSE 80
 COPY . /var/www/gm_pr
