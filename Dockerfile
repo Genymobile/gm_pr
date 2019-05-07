@@ -13,15 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM debian:jessie
-RUN apt-get update
-RUN apt-get install -y \
-    celeryd \
-    rabbitmq-server \
-    supervisor \
-    apache2 \
-    libapache2-mod-wsgi-py3 \
-    python3-pip
+FROM ubuntu:18.04
+
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        apache2 \
+        libapache2-mod-wsgi-py3 \
+        python3-celery \
+        python3-pip \
+        rabbitmq-server \
+        supervisor
+
 COPY requirements/commons.txt /tmp/commons.txt
 RUN pip3 install -r /tmp/commons.txt
 COPY deploy/gm_pr.conf /etc/apache2/sites-available/gm_pr.conf
