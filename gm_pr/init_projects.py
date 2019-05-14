@@ -50,12 +50,6 @@ if projects_str:
         repo_list_str = projects[project_name]
         repo_list = repo_list_str.split(",")
         for repo_name in repo_list:
-            repo = models.Repo()
-            repo.name = repo_name
-            # We need to save the repo before we link it
-            # to the project, or else we'll get an error
-            # "...needs to have a value for field...before this many-to-many relationship can be used"
+            repo, _ = models.Repo.objects.get_or_create(name=repo_name)
+            repo.projects.add(project)
             repo.save()
-            repo.projects = [project]
-            repo.save()
-
