@@ -101,7 +101,7 @@ few seconds the list of pull requests should appear in your channel.
  * `GM_PR_SLACK_URL`: slack hook url
  * `GM_PR_OLD_PERIOD`: number of days before a PR is marked as old
  * `GM_PR_ADMIN_LOGIN`: django admin login
- * `GM_PR_ADMIN_EMAL`: django admin email
+ * `GM_PR_ADMIN_EMAIL`: django admin email
  * `GM_PR_ADMIN_PASSWORD`: django admin password
  * `GM_PR_INITIAL_PROJECTS`: comma separated initial project "project1=repo1,repo2;project2=repo3"
  * `GM_PR_DEFAULT_COLUMNS`: comma separated list of column to display (see settings_project.py)
