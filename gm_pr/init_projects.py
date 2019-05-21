@@ -20,23 +20,24 @@
 # example environment variable value:
 # env GM_PR_INITIAL_PROJECTS="Material design repos=material-design-lite,material-design-icons;GCM repos=gcm,go-gcm"
 
-from gm_pr import models
+import django
+
+from gm_pr import models, settings
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-import os
 import logging
 
 logger = logging.getLogger('gm_pr')
 
+django.setup()
+
 try:
     User.objects.create_superuser(
-        os.environ.get('GM_PR_ADMIN_LOGIN', 'admin'),
-        os.environ.get('GM_PR_ADMIN_EMAIL', 'admin@localhost'),
-        os.environ.get('GM_PR_ADMIN_PASSWORD', 'admin'))
-except IntegrityError as e:
+        settings.ADMIN_LOGIN, settings.ADMIN_EMAIL, settings.ADMIN_PASSWORD)
+except IntegrityError:
     logger.warning("admin user already created")
 
-projects_str = os.environ.get("GM_PR_INITIAL_PROJECTS")
+projects_str = settings.INITIAL_PROJECTS
 if projects_str:
     # We have an environment variable value, delete existing
     # projects and repos from the DB
@@ -44,18 +45,15 @@ if projects_str:
     models.Repo.objects.all().delete()
     projects = dict(item.split("=") for item in projects_str.split(";"))
     for project_name in projects:
-        project = models.Project()
-        project.name=project_name
+        project = models.Project(name=project_name)
+        # Django cannot set columns until the project instance exists, so
+        # save now
+        project.save()
+        project.columns = models.default_columns()
         project.save()
         repo_list_str = projects[project_name]
         repo_list = repo_list_str.split(",")
         for repo_name in repo_list:
-            repo = models.Repo()
-            repo.name = repo_name
-            # We need to save the repo before we link it
-            # to the project, or else we'll get an error
-            # "...needs to have a value for field...before this many-to-many relationship can be used"
+            repo, _ = models.Repo.objects.get_or_create(name=repo_name)
+            repo.projects.add(project)
             repo.save()
-            repo.projects = [project]
-            repo.save()
-
