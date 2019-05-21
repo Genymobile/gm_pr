@@ -44,8 +44,11 @@ if projects_str:
     models.Repo.objects.all().delete()
     projects = dict(item.split("=") for item in projects_str.split(";"))
     for project_name in projects:
-        project = models.Project()
-        project.name=project_name
+        project = models.Project(name=project_name)
+        # Django cannot set columns until the project instance exists, so
+        # save now
+        project.save()
+        project.columns = models.default_columns()
         project.save()
         repo_list_str = projects[project_name]
         repo_list = repo_list_str.split(",")
