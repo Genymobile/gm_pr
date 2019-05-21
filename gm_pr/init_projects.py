@@ -20,23 +20,20 @@
 # example environment variable value:
 # env GM_PR_INITIAL_PROJECTS="Material design repos=material-design-lite,material-design-icons;GCM repos=gcm,go-gcm"
 
-from gm_pr import models
+from gm_pr import models, settings
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-import os
 import logging
 
 logger = logging.getLogger('gm_pr')
 
 try:
     User.objects.create_superuser(
-        os.environ.get('GM_PR_ADMIN_LOGIN', 'admin'),
-        os.environ.get('GM_PR_ADMIN_EMAIL', 'admin@localhost'),
-        os.environ.get('GM_PR_ADMIN_PASSWORD', 'admin'))
-except IntegrityError as e:
+        settings.ADMIN_LOGIN, settings.ADMIN_EMAIL, settings.ADMIN_PASSWORD)
+except IntegrityError:
     logger.warning("admin user already created")
 
-projects_str = os.environ.get("GM_PR_INITIAL_PROJECTS")
+projects_str = settings.INITIAL_PROJECTS
 if projects_str:
     # We have an environment variable value, delete existing
     # projects and repos from the DB
