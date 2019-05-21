@@ -50,9 +50,9 @@ def _read_tuple(key, fallback=None, mandatory=False):
 ##
 
 # generate a token here: https://github.com/settings/tokens
-GITHUB_OAUTHTOKEN = _read_str('GITHUB_OAUTHTOKEN')
+GITHUB_OAUTHTOKEN = _read_str('GITHUB_OAUTHTOKEN', mandatory=True)
 # name of your github organisation
-ORG = _read_str('ORG', 'Genymobile')
+ORG = _read_str('ORG', mandatory=True)
 # do not change this :-)
 TOP_LEVEL_URL = "https://api.github.com"
 
