@@ -20,12 +20,16 @@
 # example environment variable value:
 # env GM_PR_INITIAL_PROJECTS="Material design repos=material-design-lite,material-design-icons;GCM repos=gcm,go-gcm"
 
+import django
+
 from gm_pr import models, settings
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 import logging
 
 logger = logging.getLogger('gm_pr')
+
+django.setup()
 
 try:
     User.objects.create_superuser(
