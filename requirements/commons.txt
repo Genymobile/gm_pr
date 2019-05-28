@@ -1,4 +1,4 @@
-Django>=1.10,<1.10.99
+Django>=1.11,<1.11.99
 celery>=3.1,<4 # celery 4 is not compatible with django-celery
 django-celery>=3.3,<3.3.99
 tablib>=0.11.4,<0.11.99
