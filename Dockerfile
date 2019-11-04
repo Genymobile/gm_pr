@@ -34,5 +34,11 @@ EXPOSE 80
 COPY . /var/www/gm_pr
 WORKDIR /var/www/gm_pr
 RUN mkdir rw
+
+# Run this before chowning rw because it creates rw/gm_pr.log as root
+# Define dummy values for mandatory settings otherwise python can't import
+# settings.py
+RUN GM_PR_GITHUB_OAUTHTOKEN=dummy GM_PR_ORG=dummy python3 manage.py collectstatic --noinput
+
 RUN chown -R www-data:www-data rw
 CMD supervisord -c deploy/supervisord.conf
